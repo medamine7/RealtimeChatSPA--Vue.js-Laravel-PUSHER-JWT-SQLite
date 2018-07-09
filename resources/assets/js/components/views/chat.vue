@@ -33,7 +33,7 @@
 				</div>
 			</div>
 			<div class="text-field">
-				<textarea placeholder="Type in your message here..." v-model="message"/>
+				<textarea placeholder="Type in your message here..." v-model="message" @keyup='test'></textarea>
 				<button class="cool-btn" @click="sendMessage">Send</button>
 			</div>
 		</div>
@@ -345,6 +345,8 @@
 
 
 <script>
+	import axios from 'axios'
+	axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 	export default {
 		name:'chat',
 		data(){
@@ -352,18 +354,26 @@
 				userId:'',
 				userName:'',
 				userEmail:'',
-				message: ''
+				message: '',
+				conversationId:1,
+				conversations:''
 			}
 		},
 		created(){
 			var Ref= this;
-			axios.get('/api/user/info?token='+localStorage.getItem('token'))
-			.then(response=>{
-				console.log(response.data.user);
-				Ref.userId=response.data.user.id;
-				Ref.userName=response.data.user.name;
-				Ref.userEmail=response.data.user.email;
-			})
+			var token=localStorage.getItem('token');
+			axios.all([
+				axios.get('/api/user/info?token='+token),
+				axios.get('/api/conversations?token='+token)
+			  ])
+			.then(axios.spread((userResponse, conversationsResponse) => {
+				Ref.userId=userResponse.data.user.id;
+				Ref.userName=userResponse.data.user.name;
+				Ref.userEmail=userResponse.data.user.email;
+
+				Ref.conversations=conversationsResponse.data;
+				console.log(this.conversations);
+			}))
 			.catch(error=>{
 				console.log(error);
 			});
@@ -374,8 +384,21 @@
 				localStorage.removeItem('token');
 				this.$router.push({name:'home'});
 			},
-			sendMessage(){
 
+			test(){
+				console.log(this.message);
+			},
+
+			sendMessage(){
+				let token= localStorage.getItem('token');
+				axios.post('/api/message/send?token='+token,
+					{conversation_id:this.conversationId, message: this.message})
+				.then(response =>{
+					console.log(response);
+				})
+				.catch(error =>{
+					console.log(error);
+				});
 			}
 		}
 	}

@@ -14,6 +14,7 @@ class MessagesController extends Controller
     	$author_id= JWTAuth::parseToken()->toUser()->id;
 
 
+
     	$message= new Message([
     		'message' => $body,
     		'author_id' => $author_id,
@@ -22,6 +23,8 @@ class MessagesController extends Controller
 
 
     	$message->save();
+
+    	return response()->json(['message'=>'your message was sent successfully!'],201);
 
     }
 }

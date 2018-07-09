@@ -8,7 +8,7 @@ class Conversation extends Model
 {
     
 
-    public function User(){
+    public function users(){
     	return $this->belongsToMany('App\User');
     }
 

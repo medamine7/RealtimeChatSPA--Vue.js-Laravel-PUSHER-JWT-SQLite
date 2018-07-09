@@ -4,7 +4,7 @@
 			<div class="modal-indicator"><span>Login</span></div>
 			<div class="form-element">
 				<label for="email">Email:</label>
-				<input type="text" class="cool-input" v-model="email" @keyup.enter='validate'>
+				<input type="text" class="cool-input" v-model="email" @keyup.enter='validate' autofocus>
 			</div>
 			<div class="form-element">
 				<label for="password">Password:</label>

@@ -19,7 +19,11 @@ Route::post('/user/register','UserController@register');
 Route::post('/user/login','UserController@login');
 
 
-Route::get('/user/info','UserController@userInfo');
+Route::middleware(['jwt.auth'])->group(function () {
 
+	Route::get('/user/info','UserController@userInfo');
+	Route::post('/message/send','MessagesController@sendMessage');
+	Route::get('/conversations','ConversationsController@getConversations');
+	
+});
 
-Route::get('/message/send','UserController@sendMessage');

@@ -4,7 +4,7 @@
 			<div class="modal-indicator"><span>Register</span></div>
 			<div class="form-element">
 				<label for="name">Name:</label>
-				<input class="cool-input" type="text" v-model="name">
+				<input class="cool-input" type="text" v-model="name" autofocus>
 			</div>
 			<div class="form-element">
 				<label for="email">Email:</label>

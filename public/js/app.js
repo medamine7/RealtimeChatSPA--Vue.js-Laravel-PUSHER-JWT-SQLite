@@ -50585,7 +50585,7 @@ var render = function() {
               }
             ],
             staticClass: "cool-input",
-            attrs: { type: "text" },
+            attrs: { type: "text", autofocus: "" },
             domProps: { value: _vm.email },
             on: {
               keyup: function($event) {
@@ -51833,7 +51833,7 @@ var render = function() {
               }
             ],
             staticClass: "cool-input",
-            attrs: { type: "text" },
+            attrs: { type: "text", autofocus: "" },
             domProps: { value: _vm.name },
             on: {
               input: function($event) {
@@ -52302,6 +52302,7 @@ var render = function() {
           attrs: { placeholder: "Type in your message here..." },
           domProps: { value: _vm.message },
           on: {
+            keyup: _vm.test,
             input: function($event) {
               if ($event.target.composing) {
                 return
@@ -52487,6 +52488,8 @@ exports.push([module.i, "\n.chat-container {\n  background: #fff;\n  height: 100
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
 //
 //
 //
@@ -52834,6 +52837,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+__WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /* harmony default export */ __webpack_exports__["default"] = ({
 	name: 'chat',
 	data: function data() {
@@ -52841,17 +52846,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			userId: '',
 			userName: '',
 			userEmail: '',
-			message: ''
+			message: '',
+			conversationId: 1,
+			conversations: ''
 		};
 	},
 	created: function created() {
+		var _this = this;
+
 		var Ref = this;
-		axios.get('/api/user/info?token=' + localStorage.getItem('token')).then(function (response) {
-			console.log(response.data.user);
-			Ref.userId = response.data.user.id;
-			Ref.userName = response.data.user.name;
-			Ref.userEmail = response.data.user.email;
-		}).catch(function (error) {
+		var token = localStorage.getItem('token');
+		__WEBPACK_IMPORTED_MODULE_0_axios___default.a.all([__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/user/info?token=' + token), __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/conversations?token=' + token)]).then(__WEBPACK_IMPORTED_MODULE_0_axios___default.a.spread(function (userResponse, conversationsResponse) {
+			Ref.userId = userResponse.data.user.id;
+			Ref.userName = userResponse.data.user.name;
+			Ref.userEmail = userResponse.data.user.email;
+
+			Ref.conversations = conversationsResponse.data;
+			console.log(_this.conversations);
+		})).catch(function (error) {
 			console.log(error);
 		});
 	},
@@ -52862,7 +52874,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			localStorage.removeItem('token');
 			this.$router.push({ name: 'home' });
 		},
-		sendMessage: function sendMessage() {}
+		test: function test() {
+			console.log(this.message);
+		},
+		sendMessage: function sendMessage() {
+			var token = localStorage.getItem('token');
+			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/message/send?token=' + token, { conversation_id: this.conversationId, message: this.message }).then(function (response) {
+				console.log(response);
+			}).catch(function (error) {
+				console.log(error);
+			});
+		}
 	}
 });
 
