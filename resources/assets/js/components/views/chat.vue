@@ -343,8 +343,13 @@
 			}
 		},
 		created(){
-			var Ref= this;
 			var token=localStorage.getItem('token');
+			var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace('-', '+').replace('_', '/');
+            console.log(JSON.parse(window.atob(base64)));
+
+
+			var Ref= this;
 			axios.all([
 				axios.get('/api/user/info?token='+token),
 				axios.get('/api/conversations?token='+token)
