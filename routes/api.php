@@ -24,6 +24,7 @@ Route::middleware(['jwt.auth'])->group(function () {
 	Route::get('/user/info','UserController@userInfo');
 	Route::post('/message/send','MessagesController@sendMessage');
 	Route::get('/conversations','ConversationsController@getConversations');
+	Route::post('/conversation/get','ConversationsController@getConversation');
 	
 });
 

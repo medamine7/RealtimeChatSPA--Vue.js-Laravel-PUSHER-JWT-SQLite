@@ -13,20 +13,32 @@ class ConversationsController extends Controller
     	public function getConversation(Request $request){
     		$conversation_id=$request->get('conversation_id');
 
-    		$conversation=Conversation::where('id',$conversation_id)->get();
-    	}
+    		$conversation=Conversation::where('id',$conversation_id)
+            ->with(['users','messages' => function($query) use ($conversation_id){
+                $query->orderBy('created_at','desc');
+            }])
+            ->first();
+
+			return response()->json(compact('conversation'),200);
+        }
 
 
-    	public function getConversations(Request $request){
-    		$user_id=JWTAuth::parseToken()->toUser()->id;
+        public function getConversations(Request $request){
+            $user_id=JWTAuth::parseToken()->toUser()->id;
 
-    		$conversations = Conversation::where(function ($query) use ($user_id) {
-			    $query->where('user1_id' , $user_id)
-			          ->orWhere('user2_id' , $user_id);
-			})
-			->orderBy('created_at','desc')
-			->get();
+            $conversations = Conversation::orderBy('created_at','desc')
+            ->with(['users' => function($query) use ($user_id){
+                $query->where('user_id','!=', $user_id)
+                ->first();
+            },
+            'messages' => function ($query){
+                $query->orderBy('created_at', 'desc')
+                ->first();
+            }])
+            ->whereHas('users', function($query) use ($user_id){
+                $query->where('user_id',$user_id);
+            })->get();
 
-			return response()->json(compact('conversations'),200);
+            return response()->json(compact('conversations'),200);
     	}
 }

@@ -10,13 +10,13 @@ class MessagesController extends Controller
 {
     public function sendMessage(Request $request){
     	$conversation_id=$request->get('conversation_id');
-    	$body=$request->get('message');
+    	$body=$request->get('body');
     	$author_id= JWTAuth::parseToken()->toUser()->id;
 
 
 
     	$message= new Message([
-    		'message' => $body,
+    		'body' => $body,
     		'author_id' => $author_id,
     		'conversation_id' => $conversation_id
     	]);

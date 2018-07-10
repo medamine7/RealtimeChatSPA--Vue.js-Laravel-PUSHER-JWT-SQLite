@@ -52287,7 +52287,38 @@ var render = function() {
     _c("div", { staticClass: "chat" }, [
       _vm._m(3),
       _vm._v(" "),
-      _vm._m(4),
+      _vm.current_conversation
+        ? _c(
+            "div",
+            { staticClass: "chat-content" },
+            _vm._l(_vm.current_conversation.messages, function(message) {
+              return _c(
+                "div",
+                {
+                  class: [
+                    message.author_id == 1 ? "own-message" : "other-message",
+                    "message"
+                  ]
+                },
+                [
+                  _c("div", { staticClass: "chat-avatar" }, [
+                    message.author_id != 1
+                      ? _c("img", {
+                          attrs: {
+                            src:
+                              "https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg",
+                            alt: ""
+                          }
+                        })
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [_vm._v(_vm._s(message.body))])
+                ]
+              )
+            })
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "text-field" }, [
         _c("textarea", {
@@ -52302,7 +52333,6 @@ var render = function() {
           attrs: { placeholder: "Type in your message here..." },
           domProps: { value: _vm.message },
           on: {
-            keyup: _vm.test,
             input: function($event) {
               if ($event.target.composing) {
                 return
@@ -52320,7 +52350,32 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _vm._m(5)
+    _c(
+      "div",
+      { staticClass: "conversations" },
+      _vm._l(_vm.conversations, function(conversation) {
+        return _c(
+          "div",
+          {
+            staticClass: "conversation",
+            on: {
+              click: function($event) {
+                _vm.getConversation(conversation.id)
+              }
+            }
+          },
+          [
+            _vm._m(4, true),
+            _vm._v(" "),
+            _c("div", [
+              _c("h3", [_vm._v(_vm._s(conversation.users[0].name))]),
+              _vm._v(" "),
+              _c("p", [_vm._v(_vm._s(conversation.messages[0].body))])
+            ])
+          ]
+        )
+      })
+    )
   ])
 }
 var staticRenderFns = [
@@ -52366,68 +52421,14 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "chat-content" }, [
-      _c("div", { staticClass: "other-messages" }, [
-        _c("div", { staticClass: "message" }, [
-          _c("div", { staticClass: "chat-avatar" }, [
-            _c("img", {
-              attrs: {
-                src:
-                  "https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg",
-                alt: ""
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("p", [_vm._v("Hello John :)")])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "own-messages" }, [
-        _c("div", { staticClass: "message" }, [_c("p", [_vm._v("Hey Jane!")])])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "conversations" }, [
-      _c("div", { staticClass: "conversation" }, [
-        _c("div", [
-          _c("img", {
-            attrs: {
-              src:
-                "https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg",
-              alt: ""
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", [
-          _c("h3", [_vm._v("Jane Rose")]),
-          _vm._v(" "),
-          _c("p", [_vm._v("Hello john")])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "conversation" }, [
-        _c("div", [
-          _c("img", {
-            attrs: {
-              src:
-                "https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg",
-              alt: ""
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", [
-          _c("h3", [_vm._v("Jane Rose")]),
-          _vm._v(" "),
-          _c("p", [_vm._v("Hello john")])
-        ])
-      ])
+    return _c("div", [
+      _c("img", {
+        attrs: {
+          src:
+            "https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg",
+          alt: ""
+        }
+      })
     ])
   }
 ]
@@ -52477,7 +52478,7 @@ exports = module.exports = __webpack_require__(45)(false);
 
 
 // module
-exports.push([module.i, "\n.chat-container {\n  background: #fff;\n  height: 100vh;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n}\n.sidebar,\n.conversations {\n  position: relative;\n  height: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  background: #f5f6fa;\n  width: 300px;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.avatar-container {\n  width: 100px;\n  height: 100px;\n  border-radius: 50%;\n  position: relative;\n}\n.avatar-container .avatar {\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    overflow: hidden;\n    border-radius: 50%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    width: 100%;\n    height: 100%;\n}\n.avatar-container img {\n    width: 110%;\n    height: auto;\n}\n.chat {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  position: relative;\n  width: auto;\n  height: 100%;\n  padding: 0 10px;\n}\n.chat-content {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n  height: 100%;\n  width: 100%;\n  overflow-y: auto;\n}\n.own-messages {\n  width: 100%;\n}\n.own-messages .message {\n    -webkit-box-pack: end;\n        -ms-flex-pack: end;\n            justify-content: flex-end;\n}\n.own-messages .message p {\n      background: #0097e6;\n}\n.other-messages {\n  width: 100%;\n}\n.other-messages .message p {\n    background: gray;\n}\n.message {\n  margin: 0 5px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.message p {\n    border-radius: 20px;\n    padding: 10px;\n    word-break: break-word;\n    color: #fff;\n    display: inline-block;\n}\n.chat-avatar {\n  height: 30px;\n  margin-right: 5px;\n  width: 30px;\n  border-radius: 50%;\n  overflow: hidden;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.chat-avatar img {\n    width: 110%;\n    height: auto;\n}\n.text-field {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  min-height: 100px;\n  border-top: 1px solid #e6e8ea;\n}\n.text-field .cool-btn {\n    width: 100px !important;\n    font-size: 15px;\n    margin: 0 5px;\n}\n.text-field textarea {\n    font-family: karla;\n    border: none;\n    border: 1px solid #e6e8ea;\n    font-size: 16px;\n    border-radius: 20px;\n    min-height: 1em;\n    padding: 10px;\n    outline: none;\n    width: auto;\n    resize: none;\n    -webkit-box-flex: 1;\n        -ms-flex: 1;\n            flex: 1;\n}\n.chat-header {\n  border-bottom: 1px solid #e6e8ea;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  height: 100px;\n}\n.sidebar {\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n.sidebar h3 {\n    text-transform: capitalize;\n}\n.sidebar ul {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    width: 100%;\n    color: #57606f;\n    background: #dfe4ea;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    padding: 0;\n}\n.sidebar li {\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    padding: 20px 0;\n    cursor: pointer;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    width: 100%;\n    text-transform: uppercase;\n    -webkit-transition: all .2s;\n    transition: all .2s;\n}\n.sidebar li p {\n      position: relative;\n      margin: 0;\n      padding: 0;\n}\n.sidebar li p span {\n        height: 15px;\n        width: auto;\n        padding: 0 5px;\n        font-size: 12px;\n        background: #da7079;\n        position: absolute;\n        color: #fff;\n        top: -5px;\n        right: -11px;\n        display: -webkit-box;\n        display: -ms-flexbox;\n        display: flex;\n        -webkit-box-pack: center;\n            -ms-flex-pack: center;\n                justify-content: center;\n        -webkit-box-align: center;\n            -ms-flex-align: center;\n                align-items: center;\n        border-radius: 50%;\n}\n.sidebar li:nth-of-type(3):hover {\n      background: #ff4757;\n}\n.sidebar li:hover {\n      background: #70a1ff;\n      color: #fff;\n}\n.conversation {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n  padding: 10px;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  cursor: pointer;\n  color: #57606f;\n  position: relative;\n}\n.conversation:hover {\n    background: #dfe4ea;\n}\n.conversation:after {\n    content: '';\n    position: absolute;\n    top: 0;\n    bottom: 0;\n    background: transparent;\n    left: 10px;\n    right: 10px;\n    border-bottom: 1px solid #e6e8ea;\n}\n.conversation h3 {\n    font-weight: normal;\n    margin: 0 10px;\n}\n.conversation div:nth-of-type(1) {\n    width: 100px;\n    height: 100px;\n    border-radius: 50%;\n    position: relative;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    overflow: hidden;\n    border-radius: 50%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    width: 50px;\n    height: 50px;\n}\n.conversation div:nth-of-type(1) img {\n      width: 110%;\n      height: auto;\n}\n.conversation div:nth-of-type(2) {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n}\n.conversation div:nth-of-type(2) p {\n      margin: 0;\n}\nli {\n  list-style: none;\n}\n", ""]);
+exports.push([module.i, "\n.chat-container {\n  background: #fff;\n  height: 100vh;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n}\n.sidebar,\n.conversations {\n  position: relative;\n  height: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  background: #f5f6fa;\n  width: 300px;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.avatar-container {\n  width: 100px;\n  height: 100px;\n  border-radius: 50%;\n  position: relative;\n}\n.avatar-container .avatar {\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    overflow: hidden;\n    border-radius: 50%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    width: 100%;\n    height: 100%;\n}\n.avatar-container img {\n    width: 110%;\n    height: auto;\n}\n.chat {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  position: relative;\n  width: auto;\n  height: 100%;\n  padding: 0 10px;\n}\n.chat-content {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: reverse;\n      -ms-flex-direction: column-reverse;\n          flex-direction: column-reverse;\n  height: 100%;\n  width: 100%;\n  overflow-y: auto;\n}\n.own-message {\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n}\n.own-message p {\n    background: #0097e6;\n}\n.other-message p {\n  background: gray;\n}\n.message {\n  width: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.message p {\n    border-radius: 20px;\n    padding: 7px 10px;\n    word-break: break-word;\n    color: #fff;\n    display: inline-block;\n}\n.chat-avatar {\n  height: 30px;\n  margin-right: 5px;\n  width: 30px;\n  border-radius: 50%;\n  overflow: hidden;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.chat-avatar img {\n    width: 110%;\n    height: auto;\n}\n.text-field {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  min-height: 100px;\n  border-top: 1px solid #e6e8ea;\n}\n.text-field .cool-btn {\n    width: 100px !important;\n    font-size: 15px;\n    margin: 0 5px;\n}\n.text-field textarea {\n    font-family: karla;\n    border: none;\n    border: 1px solid #e6e8ea;\n    font-size: 16px;\n    border-radius: 20px;\n    min-height: 1em;\n    padding: 10px;\n    outline: none;\n    width: auto;\n    resize: none;\n    -webkit-box-flex: 1;\n        -ms-flex: 1;\n            flex: 1;\n}\n.chat-header {\n  border-bottom: 1px solid #e6e8ea;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  height: 100px;\n}\n.sidebar {\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n.sidebar h3 {\n    text-transform: capitalize;\n}\n.sidebar ul {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    width: 100%;\n    color: #57606f;\n    background: #dfe4ea;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    padding: 0;\n}\n.sidebar li {\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    padding: 20px 0;\n    cursor: pointer;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    width: 100%;\n    text-transform: uppercase;\n    -webkit-transition: all .2s;\n    transition: all .2s;\n}\n.sidebar li p {\n      position: relative;\n      margin: 0;\n      padding: 0;\n}\n.sidebar li p span {\n        height: 15px;\n        width: auto;\n        padding: 0 5px;\n        font-size: 12px;\n        background: #da7079;\n        position: absolute;\n        color: #fff;\n        top: -5px;\n        right: -11px;\n        display: -webkit-box;\n        display: -ms-flexbox;\n        display: flex;\n        -webkit-box-pack: center;\n            -ms-flex-pack: center;\n                justify-content: center;\n        -webkit-box-align: center;\n            -ms-flex-align: center;\n                align-items: center;\n        border-radius: 50%;\n}\n.sidebar li:nth-of-type(3):hover {\n      background: #ff4757;\n}\n.sidebar li:hover {\n      background: #70a1ff;\n      color: #fff;\n}\n.conversation {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n  padding: 10px;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  cursor: pointer;\n  color: #57606f;\n  position: relative;\n}\n.conversation:hover {\n    background: #dfe4ea;\n}\n.conversation:after {\n    content: '';\n    position: absolute;\n    top: 0;\n    bottom: 0;\n    background: transparent;\n    left: 10px;\n    right: 10px;\n    border-bottom: 1px solid #e6e8ea;\n}\n.conversation h3 {\n    font-weight: normal;\n    margin: 0 10px;\n}\n.conversation div:nth-of-type(1) {\n    width: 100px;\n    height: 100px;\n    border-radius: 50%;\n    position: relative;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    overflow: hidden;\n    border-radius: 50%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    width: 50px;\n    height: 50px;\n}\n.conversation div:nth-of-type(1) img {\n      width: 110%;\n      height: auto;\n}\n.conversation div:nth-of-type(2) {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    padding: 0 10px;\n}\n.conversation div:nth-of-type(2) p {\n      margin: 0;\n      width: 100%;\n}\n.conversation div:nth-of-type(2) h3 {\n      width: 100%;\n}\nli {\n  list-style: none;\n}\n", ""]);
 
 // exports
 
@@ -52819,23 +52820,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -52847,13 +52831,11 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			userName: '',
 			userEmail: '',
 			message: '',
-			conversationId: 1,
+			current_conversation: '',
 			conversations: ''
 		};
 	},
 	created: function created() {
-		var _this = this;
-
 		var Ref = this;
 		var token = localStorage.getItem('token');
 		__WEBPACK_IMPORTED_MODULE_0_axios___default.a.all([__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/user/info?token=' + token), __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/conversations?token=' + token)]).then(__WEBPACK_IMPORTED_MODULE_0_axios___default.a.spread(function (userResponse, conversationsResponse) {
@@ -52861,8 +52843,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			Ref.userName = userResponse.data.user.name;
 			Ref.userEmail = userResponse.data.user.email;
 
-			Ref.conversations = conversationsResponse.data;
-			console.log(_this.conversations);
+			Ref.conversations = conversationsResponse.data.conversations;
 		})).catch(function (error) {
 			console.log(error);
 		});
@@ -52874,13 +52855,19 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			localStorage.removeItem('token');
 			this.$router.push({ name: 'home' });
 		},
-		test: function test() {
-			console.log(this.message);
-		},
 		sendMessage: function sendMessage() {
 			var token = localStorage.getItem('token');
-			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/message/send?token=' + token, { conversation_id: this.conversationId, message: this.message }).then(function (response) {
+			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/message/send?token=' + token, { conversation_id: this.current_conversation.id, body: this.message }).then(function (response) {
 				console.log(response);
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		getConversation: function getConversation(id) {
+			var token = localStorage.getItem('token');
+			var Ref = this;
+			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/conversation/get?token=' + token, { conversation_id: id }).then(function (response) {
+				Ref.current_conversation = response.data.conversation;
 			}).catch(function (error) {
 				console.log(error);
 			});

@@ -17,43 +17,27 @@
 			<div class="chat-header">
 				<h3>Jane Rose</h3>
 			</div>
-			<div class="chat-content">
-				<div class="other-messages">
-					<div class="message">
-						<div class="chat-avatar">
-							<img src="https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg" alt="">
-						</div>
-						<p>Hello John :)</p>
+			<div class="chat-content" v-if="current_conversation">
+				<div :class="[(message.author_id == 1)? 'own-message' : 'other-message', 'message']" v-for="message in current_conversation.messages" >
+					<div class="chat-avatar">
+						<img src="https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg" alt="" v-if="message.author_id != 1">
 					</div>
-				</div>
-				<div class="own-messages">
-					<div class="message">
-						<p>Hey Jane!</p>
-					</div>
+					<p>{{message.body}}</p>
 				</div>
 			</div>
 			<div class="text-field">
-				<textarea placeholder="Type in your message here..." v-model="message" @keyup='test'></textarea>
+				<textarea placeholder="Type in your message here..." v-model="message"></textarea>
 				<button class="cool-btn" @click="sendMessage">Send</button>
 			</div>
 		</div>
 		<div class="conversations">
-			<div class="conversation">
+			<div class="conversation" v-for="conversation in conversations" @click="getConversation(conversation.id)">
 				<div>
 					<img src="https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg" alt="">
 				</div>
 				<div>
-					<h3>Jane Rose</h3>
-					<p>Hello john</p>
-				</div>
-			</div>
-			<div class="conversation">
-				<div>
-					<img src="https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg" alt="">
-				</div>
-				<div>
-					<h3>Jane Rose</h3>
-					<p>Hello john</p>
+					<h3>{{conversation.users[0].name}}</h3>
+					<p>{{conversation.messages[0].body}}</p>
 				</div>
 			</div>
 		</div>
@@ -118,40 +102,33 @@
 
 	.chat-content{
 		display:flex;
-		flex-direction: column;
-		justify-content: flex-end;
+		flex-direction: column-reverse;
 		height:100%;
 		width:100%;
 		overflow-y:auto;
 
 	}
 
-	.own-messages{
-		width:100%;
-		.message{
-			justify-content: flex-end;
-			p{
-				background:#0097e6;
-			}
+	.own-message{
+		justify-content: flex-end;
+		p{
+			background:#0097e6;
 		}
 	}
 
-	.other-messages{
-		width:100%;
-		.message{
-			p{
-				background:gray;
-			}
+	.other-message{
+		p{
+			background:gray;
 		}
 	}
 
 	.message{
-		margin: 0 5px;
+		width:100%;
 		display:flex;
 		align-items:center;
 		p{
 			border-radius: 20px;
-			padding: 10px;
+			padding: 7px 10px;
 		    word-break: break-word;
 			color:#fff;
 			display: inline-block;
@@ -330,9 +307,15 @@
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
+			padding: 0 10px;
 
 			p{
 				margin:0;
+				width:100%;
+			}
+
+			h3{
+				width:100%;
 			}
 		}
 	}
@@ -355,7 +338,7 @@
 				userName:'',
 				userEmail:'',
 				message: '',
-				conversationId:1,
+				current_conversation:'',
 				conversations:''
 			}
 		},
@@ -371,8 +354,7 @@
 				Ref.userName=userResponse.data.user.name;
 				Ref.userEmail=userResponse.data.user.email;
 
-				Ref.conversations=conversationsResponse.data;
-				console.log(this.conversations);
+				Ref.conversations=conversationsResponse.data.conversations;
 			}))
 			.catch(error=>{
 				console.log(error);
@@ -385,16 +367,25 @@
 				this.$router.push({name:'home'});
 			},
 
-			test(){
-				console.log(this.message);
-			},
-
 			sendMessage(){
 				let token= localStorage.getItem('token');
 				axios.post('/api/message/send?token='+token,
-					{conversation_id:this.conversationId, message: this.message})
+					{conversation_id: this.current_conversation.id, body: this.message})
 				.then(response =>{
 					console.log(response);
+				})
+				.catch(error =>{
+					console.log(error);
+				});
+			},
+
+			getConversation(id){
+				let token= localStorage.getItem('token');
+				var Ref=this;
+				axios.post('/api/conversation/get?token='+token,
+					{conversation_id: id})
+				.then(response =>{
+					Ref.current_conversation=response.data.conversation;
 				})
 				.catch(error =>{
 					console.log(error);
