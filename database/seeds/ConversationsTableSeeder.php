@@ -12,8 +12,14 @@ class ConversationsTableSeeder extends Seeder
     public function run()
     {
         
-         DB::table('conversations')->insert([
-         	//
-        ]);
+        $conv1 = new App\Conversation();
+        $conv1->save();
+
+
+        $conv2 = new App\Conversation();
+        $conv2->save();
+
+
+
     }
 }

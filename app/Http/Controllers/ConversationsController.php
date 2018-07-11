@@ -12,14 +12,19 @@ class ConversationsController extends Controller
 
     	public function getConversation(Request $request){
     		$conversation_id=$request->get('conversation_id');
+            $user_id=JWTAuth::parseToken()->toUser()->id;
 
-    		$conversation=Conversation::where('id',$conversation_id)
-            ->with(['users','messages' => function($query) use ($conversation_id){
+            $conversation=Conversation::where('id',$conversation_id)
+            ->with(['messages' => function($query) use ($conversation_id){
                 $query->orderBy('created_at','desc');
+            },
+            'users' => function($query) use ($user_id){
+                $query->where('user_id','!=', $user_id)
+                ->first();
             }])
             ->first();
 
-			return response()->json(compact('conversation'),200);
+            return response()->json(compact('conversation'),200);
         }
 
 
@@ -29,12 +34,9 @@ class ConversationsController extends Controller
             $conversations = Conversation::orderBy('created_at','desc')
             ->with(['users' => function($query) use ($user_id){
                 $query->where('user_id','!=', $user_id)
-                ->first();
+                ->get();
             },
-            'messages' => function ($query){
-                $query->orderBy('created_at', 'desc')
-                ->first();
-            }])
+            'last_message'])
             ->whereHas('users', function($query) use ($user_id){
                 $query->where('user_id',$user_id);
             })->get();

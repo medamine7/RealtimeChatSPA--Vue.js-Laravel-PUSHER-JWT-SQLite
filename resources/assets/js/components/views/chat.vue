@@ -3,7 +3,7 @@
 		<div class="sidebar">
 			<div class="avatar-container">
 				<div class="avatar">
-					<img src="https://www.instituteofhypnotherapy.com/wp-content/uploads/2016/01/tutor-8.jpg" alt="">
+					<img :src="userAvatar" alt="">
 				</div>
 			</div>
 			<h3>{{userName}}</h3>
@@ -13,16 +13,18 @@
 				<li @click="logout"><p>log out</p></li>
 			</ul>
 		</div>
-		<div class="chat">
+		<div class="chat" v-if="current_conversation">
 			<div class="chat-header">
-				<h3>Jane Rose</h3>
+				<h3>{{current_conversation.users[0].name}}</h3>
 			</div>
 			<div class="chat-content" v-if="current_conversation">
-				<div :class="[(message.author_id == 1)? 'own-message' : 'other-message', 'message']" v-for="message in current_conversation.messages" >
-					<div class="chat-avatar">
-						<img src="https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg" alt="" v-if="message.author_id != 1">
+				<div :class="[(message.author_id == userId)? 'own-message' : 'other-message', 'message']" v-for="message in current_conversation.messages" >
+					<div class="message-wrapper">
+						<div class="chat-avatar">
+							<img src="https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg" alt="" v-if="message.author_id != userId">
+						</div>
+						<p>{{message.body}}</p>
 					</div>
-					<p>{{message.body}}</p>
 				</div>
 			</div>
 			<div class="text-field">
@@ -30,15 +32,24 @@
 				<button class="cool-btn" @click="sendMessage">Send</button>
 			</div>
 		</div>
+		<div class="chat-placeholder" v-if="!current_conversation">
+			<img src="/img/paper-plane.svg" alt="">
+			<h1>Choose a convertsation</h1>
+		</div>
 		<div class="conversations">
-			<div class="conversation" v-for="conversation in conversations" @click="getConversation(conversation.id)">
-				<div>
-					<img src="https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg" alt="">
+			<div class="conversations-wrapper">
+				<div :class="['conversation', {'active-conversation' : (activeConversation==conversation.id)}]" v-for="conversation in conversations" @click="getConversation(conversation.id);activate(conversation.id)">
+					<div>
+						<img :src="conversation.users[0].avatar" alt="">
+					</div>
+					<div>
+						<h3>{{conversation.users[0].name}}</h3>
+						<p>{{conversation.last_message.body}}</p>
+					</div>
 				</div>
-				<div>
-					<h3>{{conversation.users[0].name}}</h3>
-					<p>{{conversation.messages[0].body}}</p>
-				</div>
+			</div>
+			<div class="conversation-search">
+				<input class="cool-input" type="text" placeholder="Search for people...">
 			</div>
 		</div>
 	</div>
@@ -59,11 +70,35 @@
 		height:100%;
 		display:flex;
 		flex-direction: column;
-		
 		background:#f5f6fa;
 		width:300px;
 		align-items:center;
 	}
+
+	.conversations{
+		justify-content: space-between;
+		h3{
+			text-transform:capitalize;
+		}
+	}
+
+	.conversation-search{
+		border-top: 1px solid #e6e8ea;
+	    padding: 5px;
+    	box-sizing: border-box;
+		width: 100%;
+
+		.cool-input{
+			outline:none;
+		}
+	}
+
+	.conversations-wrapper{
+		display: flex;
+    	flex-direction: column;
+    	width: 100%;
+	}
+
 
 	.avatar-container{
 		width: 100px;
@@ -89,36 +124,71 @@
 	}
 
 
-	.chat{
+	.chat, 
+	.chat-placeholder{
 		flex:1;
 		display:flex;
-		flex-direction: column;
 		justify-content: center;
 		position: relative;
+		align-items: center;
 		width:auto;
 		height:100%;
 		padding: 0 10px;
+		flex-direction: column;
 	}
 
+
+	.chat-placeholder{
+		color:#57606f;
+		img{
+			height:auto;
+			width:100px;
+		}
+	}
+
+
 	.chat-content{
-		display:flex;
-		flex-direction: column-reverse;
 		height:100%;
 		width:100%;
 		overflow-y:auto;
+		display: flex;
+		flex-direction: column-reverse;
 
+		/* width */
+		&::-webkit-scrollbar {
+		    width: 10px;
+		}
+
+		/* Track */
+		&::-webkit-scrollbar-track {		
+		    background: #f1f1f1;
+		}
+
+		/* Handle */
+		&::-webkit-scrollbar-thumb {
+		    background: #ced6e0; 
+		    border-radius:20px;
+		}
+
+		/* Handle on hover */
+		&::-webkit-scrollbar-thumb:hover {
+		    background: #aeb5bd; 
+		}
 	}
 
 	.own-message{
 		justify-content: flex-end;
 		p{
-			background:#0097e6;
+			background:#1e90ff;
+		}
+		.message-wrapper{
+			justify-content: flex-end;
 		}
 	}
 
 	.other-message{
 		p{
-			background:gray;
+			background:#747d8c;
 		}
 	}
 
@@ -126,12 +196,20 @@
 		width:100%;
 		display:flex;
 		align-items:center;
+		flex-shrink:0;
 		p{
 			border-radius: 20px;
 			padding: 7px 10px;
 		    word-break: break-word;
 			color:#fff;
 			display: inline-block;
+			margin: 5px;
+		}
+
+		.message-wrapper{
+			width:50%;
+			display:flex;
+			align-items: center;
 		}
 	
 	}
@@ -187,7 +265,12 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		width:100%;
 		height:100px;
+
+		h3{
+			text-transform:capitalize;
+		}
 	}
 
 	.sidebar{
@@ -257,6 +340,7 @@
 	    width: 100%;
 	    padding: 10px;
 	    box-sizing: border-box;
+	    transition:all .2s;
 	    align-items: center;
 	    cursor:pointer;
 	    color:#57606f;
@@ -308,16 +392,26 @@
 			align-items: center;
 			justify-content: center;
 			padding: 0 10px;
+			width:60%;
 
 			p{
 				margin:0;
 				width:100%;
+				margin: 0;
+			    white-space: nowrap;
+			    text-overflow: ellipsis;
+			    width: 100%;
+			    overflow: hidden;
 			}
 
 			h3{
 				width:100%;
 			}
 		}
+	}
+
+	.active-conversation{
+	   	background:#dfe4ea !important;
 	}
 	
 
@@ -336,19 +430,16 @@
 			return {
 				userId:'',
 				userName:'',
-				userEmail:'',
+				userAvatar:'',
 				message: '',
 				current_conversation:'',
-				conversations:''
+				conversations:'',
+				activeConversation:''
 			}
 		},
 		created(){
 			var token=localStorage.getItem('token');
-			var base64Url = token.split('.')[1];
-            var base64 = base64Url.replace('-', '+').replace('_', '/');
-            console.log(JSON.parse(window.atob(base64)));
-
-
+			
 			var Ref= this;
 			axios.all([
 				axios.get('/api/user/info?token='+token),
@@ -357,7 +448,7 @@
 			.then(axios.spread((userResponse, conversationsResponse) => {
 				Ref.userId=userResponse.data.user.id;
 				Ref.userName=userResponse.data.user.name;
-				Ref.userEmail=userResponse.data.user.email;
+				Ref.userAvatar=userResponse.data.user.avatar;
 
 				Ref.conversations=conversationsResponse.data.conversations;
 			}))
@@ -372,12 +463,17 @@
 				this.$router.push({name:'home'});
 			},
 
+			activate(id){
+				this.activeConversation=id;
+			},
+
 			sendMessage(){
+				var Ref=this;
 				let token= localStorage.getItem('token');
 				axios.post('/api/message/send?token='+token,
 					{conversation_id: this.current_conversation.id, body: this.message})
 				.then(response =>{
-					console.log(response);
+					if (response.status==201) Ref.message='';
 				})
 				.catch(error =>{
 					console.log(error);

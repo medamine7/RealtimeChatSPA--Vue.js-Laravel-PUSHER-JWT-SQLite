@@ -1,8 +1,8 @@
 <template>
 	<div class="container">
 		<div class="art"></div>
-		<login-modal v-if="loginModal"></login-modal>
-		<register-modal v-if="registerModal"></register-modal>
+		<login-modal v-show="loginModal"></login-modal>
+		<register-modal v-show="registerModal"></register-modal>
 		<div class="header">
 			<div class="logo-container">
 				<img src="/img/deercode.png" alt="">

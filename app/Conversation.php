@@ -15,4 +15,9 @@ class Conversation extends Model
     public function messages(){
     	return $this->hasMany('App\Message');
     }
+
+
+    public function last_message(){
+    	return $this->hasOne('App\Message')->latest();
+    }
 }
