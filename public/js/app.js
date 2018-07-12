@@ -18720,6 +18720,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -18727,20 +18737,23 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 	name: 'chat',
 	data: function data() {
 		return {
+			token: '',
 			userId: '',
 			userName: '',
 			userAvatar: '',
 			message: '',
 			current_conversation: '',
 			conversations: '',
-			activeConversation: ''
+			activeConversation: '',
+			keyword: '',
+			searching: '',
+			result: ''
 		};
 	},
 	created: function created() {
-		var token = localStorage.getItem('token');
-
+		this.token = localStorage.getItem('token');
 		var Ref = this;
-		__WEBPACK_IMPORTED_MODULE_0_axios___default.a.all([__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/user/info?token=' + token), __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/conversations?token=' + token)]).then(__WEBPACK_IMPORTED_MODULE_0_axios___default.a.spread(function (userResponse, conversationsResponse) {
+		__WEBPACK_IMPORTED_MODULE_0_axios___default.a.all([__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/user/info?token=' + this.token), __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/conversations?token=' + this.token)]).then(__WEBPACK_IMPORTED_MODULE_0_axios___default.a.spread(function (userResponse, conversationsResponse) {
 			Ref.userId = userResponse.data.user.id;
 			Ref.userName = userResponse.data.user.name;
 			Ref.userAvatar = userResponse.data.user.avatar;
@@ -18762,18 +18775,29 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 		},
 		sendMessage: function sendMessage() {
 			var Ref = this;
-			var token = localStorage.getItem('token');
-			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/message/send?token=' + token, { conversation_id: this.current_conversation.id, body: this.message }).then(function (response) {
+			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/message/send?token=' + this.token, { conversation_id: this.current_conversation.id, body: this.message }).then(function (response) {
 				if (response.status == 201) Ref.message = '';
 			}).catch(function (error) {
 				console.log(error);
 			});
 		},
 		getConversation: function getConversation(id) {
-			var token = localStorage.getItem('token');
 			var Ref = this;
-			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/conversation/get?token=' + token, { conversation_id: id }).then(function (response) {
+			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/conversation/get?token=' + this.token, { conversation_id: id }).then(function (response) {
 				Ref.current_conversation = response.data.conversation;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		search: function search() {
+			var _this = this;
+
+			if (this.keyword === '') return this.searching = false;
+
+			this.searching = true;
+			var Ref = this;
+			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/user/find?token=' + this.token, { keyword: this.keyword }).then(function (response) {
+				_this.result = response.data.users;
 			}).catch(function (error) {
 				console.log(error);
 			});
@@ -18835,8 +18859,7 @@ var render = function() {
                           message.author_id != _vm.userId
                             ? _c("img", {
                                 attrs: {
-                                  src:
-                                    "https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg",
+                                  src: _vm.current_conversation.users[0].avatar,
                                   alt: ""
                                 }
                               })
@@ -18891,45 +18914,86 @@ var render = function() {
       : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "conversations" }, [
-      _c(
-        "div",
-        { staticClass: "conversations-wrapper" },
-        _vm._l(_vm.conversations, function(conversation) {
-          return _c(
+      !_vm.searching
+        ? _c(
             "div",
-            {
-              class: [
-                "conversation",
+            { staticClass: "conversations-wrapper" },
+            _vm._l(_vm.conversations, function(conversation) {
+              return _c(
+                "div",
                 {
-                  "active-conversation":
-                    _vm.activeConversation == conversation.id
-                }
-              ],
-              on: {
-                click: function($event) {
-                  _vm.getConversation(conversation.id)
-                  _vm.activate(conversation.id)
-                }
-              }
-            },
-            [
-              _c("div", [
-                _c("img", {
-                  attrs: { src: conversation.users[0].avatar, alt: "" }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", [
-                _c("h3", [_vm._v(_vm._s(conversation.users[0].name))]),
-                _vm._v(" "),
-                _c("p", [_vm._v(_vm._s(conversation.last_message.body))])
-              ])
-            ]
+                  class: [
+                    "conversation",
+                    {
+                      "active-conversation":
+                        _vm.activeConversation == conversation.id
+                    }
+                  ],
+                  on: {
+                    click: function($event) {
+                      _vm.getConversation(conversation.id)
+                      _vm.activate(conversation.id)
+                    }
+                  }
+                },
+                [
+                  _c("div", [
+                    _c("img", {
+                      attrs: { src: conversation.users[0].avatar, alt: "" }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", [
+                    _c("h3", [_vm._v(_vm._s(conversation.users[0].name))]),
+                    _vm._v(" "),
+                    _c("p", [_vm._v(_vm._s(conversation.last_message.body))])
+                  ])
+                ]
+              )
+            })
           )
-        })
-      ),
+        : _vm._e(),
       _vm._v(" "),
-      _vm._m(2)
+      _vm.searching
+        ? _c(
+            "div",
+            { staticClass: "conversations-wrapper search-results" },
+            _vm._l(_vm.result, function(user) {
+              return _c("div", { staticClass: "conversation" }, [
+                _c("div", [
+                  _c("img", { attrs: { src: user.avatar, alt: "" } })
+                ]),
+                _vm._v(" "),
+                _c("div", [_c("h3", [_vm._v(_vm._s(user.name))])])
+              ])
+            })
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "conversation-search" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.keyword,
+              expression: "keyword"
+            }
+          ],
+          staticClass: "cool-input",
+          attrs: { type: "text", placeholder: "Search for people..." },
+          domProps: { value: _vm.keyword },
+          on: {
+            keyup: _vm.search,
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.keyword = $event.target.value
+            }
+          }
+        })
+      ])
     ])
   ])
 }
@@ -18947,17 +19011,6 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("li", [_c("p", [_vm._v("settings")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "conversation-search" }, [
-      _c("input", {
-        staticClass: "cool-input",
-        attrs: { type: "text", placeholder: "Search for people..." }
-      })
-    ])
   }
 ]
 render._withStripped = true

@@ -61,6 +61,18 @@ class UserController extends Controller
     public function userInfo(Request $request){
         $user = JWTAuth::parseToken()->toUser();
 
-        return response()->json(compact('user'));
+        return response()->json(compact('user'),200);
+    }
+
+
+    public function findUser(Request $request){
+        $user_id = JWTAuth::parseToken()->toUser()->id;
+        $keyword=$request->get('keyword');
+
+        $users= User::where('name','LIKE', "%{$keyword}%")
+        ->where('id','!=', $user_id)
+        ->get();
+
+        return response()->json(compact('users'),200);
     }
 }

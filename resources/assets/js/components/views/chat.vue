@@ -21,7 +21,7 @@
 				<div :class="[(message.author_id == userId)? 'own-message' : 'other-message', 'message']" v-for="message in current_conversation.messages" >
 					<div class="message-wrapper">
 						<div class="chat-avatar">
-							<img src="https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg" alt="" v-if="message.author_id != userId">
+							<img :src="current_conversation.users[0].avatar" alt="" v-if="message.author_id != userId">
 						</div>
 						<p>{{message.body}}</p>
 					</div>
@@ -37,7 +37,7 @@
 			<h1>Choose a convertsation</h1>
 		</div>
 		<div class="conversations">
-			<div class="conversations-wrapper">
+			<div class="conversations-wrapper" v-if="!searching">
 				<div :class="['conversation', {'active-conversation' : (activeConversation==conversation.id)}]" v-for="conversation in conversations" @click="getConversation(conversation.id);activate(conversation.id)">
 					<div>
 						<img :src="conversation.users[0].avatar" alt="">
@@ -48,8 +48,18 @@
 					</div>
 				</div>
 			</div>
+			<div class="conversations-wrapper search-results" v-if="searching">
+				<div v-for="user in result" class="conversation">
+					<div>
+						<img :src="user.avatar" alt="">
+					</div>
+					<div>
+						<h3>{{user.name}}</h3>
+					</div>
+				</div>
+			</div>
 			<div class="conversation-search">
-				<input class="cool-input" type="text" placeholder="Search for people...">
+				<input class="cool-input" type="text" placeholder="Search for people..." v-model="keyword" @keyup='search'>
 			</div>
 		</div>
 	</div>
@@ -428,22 +438,25 @@
 		name:'chat',
 		data(){
 			return {
+				token:'',
 				userId:'',
 				userName:'',
 				userAvatar:'',
 				message: '',
 				current_conversation:'',
 				conversations:'',
-				activeConversation:''
+				activeConversation:'',
+				keyword:'',
+				searching:'',
+				result:''
 			}
 		},
 		created(){
-			var token=localStorage.getItem('token');
-			
+			this.token = localStorage.getItem('token');
 			var Ref= this;
 			axios.all([
-				axios.get('/api/user/info?token='+token),
-				axios.get('/api/conversations?token='+token)
+				axios.get('/api/user/info?token='+this.token),
+				axios.get('/api/conversations?token='+this.token)
 			  ])
 			.then(axios.spread((userResponse, conversationsResponse) => {
 				Ref.userId=userResponse.data.user.id;
@@ -469,8 +482,7 @@
 
 			sendMessage(){
 				var Ref=this;
-				let token= localStorage.getItem('token');
-				axios.post('/api/message/send?token='+token,
+				axios.post('/api/message/send?token='+this.token,
 					{conversation_id: this.current_conversation.id, body: this.message})
 				.then(response =>{
 					if (response.status==201) Ref.message='';
@@ -481,12 +493,26 @@
 			},
 
 			getConversation(id){
-				let token= localStorage.getItem('token');
 				var Ref=this;
-				axios.post('/api/conversation/get?token='+token,
+				axios.post('/api/conversation/get?token='+this.token,
 					{conversation_id: id})
 				.then(response =>{
 					Ref.current_conversation=response.data.conversation;
+				})
+				.catch(error =>{
+					console.log(error);
+				});
+			},
+
+			search(){
+				if(this.keyword==='') return this.searching=false;
+				
+				this.searching=true;
+				var Ref=this;
+				axios.post('/api/user/find?token='+this.token,
+					{keyword: this.keyword})
+				.then(response =>{
+					this.result=response.data.users;
 				})
 				.catch(error =>{
 					console.log(error);

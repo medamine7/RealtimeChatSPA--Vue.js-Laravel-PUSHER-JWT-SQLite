@@ -14,7 +14,6 @@ class MessagesController extends Controller
     	$author_id= JWTAuth::parseToken()->toUser()->id;
 
 
-
     	$message= new Message([
     		'body' => $body,
     		'author_id' => $author_id,
