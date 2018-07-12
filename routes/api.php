@@ -23,6 +23,7 @@ Route::middleware(['jwt.auth'])->group(function () {
 
 	Route::get('/user/info','UserController@userInfo');
 	Route::post('/user/find','UserController@findUser');
+	Route::post('/user/find/conversation','UserController@findUserConversation');
 	Route::post('/message/send','MessagesController@sendMessage');
 	Route::get('/conversations','ConversationsController@getConversations');
 	Route::post('/conversation/get','ConversationsController@getConversation');

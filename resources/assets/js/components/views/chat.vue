@@ -28,7 +28,7 @@
 				</div>
 			</div>
 			<div class="text-field">
-				<textarea placeholder="Type in your message here..." v-model="message"></textarea>
+				<textarea placeholder="Type in your message here..." v-model="message" @keydown.enter.prevent="sendMessage"></textarea>
 				<button class="cool-btn" @click="sendMessage">Send</button>
 			</div>
 		</div>
@@ -49,7 +49,7 @@
 				</div>
 			</div>
 			<div class="conversations-wrapper search-results" v-if="searching">
-				<div v-for="user in result" class="conversation">
+				<div v-for="user in result" class="conversation" @click="getFoundConversation(user.id)">
 					<div>
 						<img :src="user.avatar" alt="">
 					</div>
@@ -246,6 +246,7 @@
 		width:100%;
 		align-items:center;
 		min-height: 100px;
+		margin-top:20px;
 		border-top: 1px solid #e6e8ea;
 
 		.cool-btn{
@@ -422,6 +423,7 @@
 
 	.active-conversation{
 	   	background:#dfe4ea !important;
+	   	border-left: 5px solid #70a1ff;
 	}
 	
 
@@ -506,7 +508,7 @@
 
 			search(){
 				if(this.keyword==='') return this.searching=false;
-				
+
 				this.searching=true;
 				var Ref=this;
 				axios.post('/api/user/find?token='+this.token,
@@ -517,6 +519,19 @@
 				.catch(error =>{
 					console.log(error);
 				});
+			},
+
+			getFoundConversation(id){
+				this.searching=false;
+				var Ref=this;
+				axios.post('/api/user/find/conversation?token='+this.token,
+					{id: id})
+				.then(response =>{
+					this.current_conversation=response.data.conversation;
+				})
+				.catch(error =>{
+					console.log(error);
+				})
 			}
 		}
 	}

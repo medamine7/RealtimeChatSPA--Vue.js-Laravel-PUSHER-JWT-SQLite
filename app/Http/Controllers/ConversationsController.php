@@ -15,7 +15,7 @@ class ConversationsController extends Controller
             $user_id=JWTAuth::parseToken()->toUser()->id;
 
             $conversation=Conversation::where('id',$conversation_id)
-            ->with(['messages' => function($query) use ($conversation_id){
+            ->with(['messages' => function($query){
                 $query->orderBy('created_at','desc');
             },
             'users' => function($query) use ($user_id){

@@ -75,4 +75,25 @@ class UserController extends Controller
 
         return response()->json(compact('users'),200);
     }
+
+
+    public function findUserConversation(Request $request){
+        $user_id = JWTAuth::parseToken()->toUser()->id;
+        $other_user_id= $request->get('id');
+        $conversation = User::find($user_id)
+        ->conversations()
+        ->whereHas('users',function($query) use ($other_user_id){
+            $query->where('user_id',$other_user_id);
+        })
+        ->with(['users' => function($query) use ($other_user_id){
+            $query->where('user_id', $other_user_id)
+            ->get();
+        },
+        'messages' => function($query){
+                $query->orderBy('created_at','desc');
+            }
+        ])
+        ->first();
+        return response()->json(compact('conversation'),200);
+    }
 }
