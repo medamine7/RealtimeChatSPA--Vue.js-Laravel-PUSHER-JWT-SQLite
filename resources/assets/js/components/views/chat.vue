@@ -13,15 +13,15 @@
 				<li @click="logout"><p>log out</p></li>
 			</ul>
 		</div>
-		<div class="chat" v-if="current_conversation">
+		<div class="chat" v-if="current_conversation!=='unchosen'">
 			<div class="chat-header">
-				<h3>{{current_conversation.users[0].name}}</h3>
+				<h3>{{currentContact.name}}</h3>
 			</div>
 			<div class="chat-content" v-if="current_conversation">
 				<div :class="[(message.author_id == userId)? 'own-message' : 'other-message', 'message']" v-for="message in current_conversation.messages" >
 					<div class="message-wrapper">
 						<div class="chat-avatar">
-							<img :src="current_conversation.users[0].avatar" alt="" v-if="message.author_id != userId">
+							<img :src="currentContact.avatar" alt="" v-if="message.author_id != userId">
 						</div>
 						<p>{{message.body}}</p>
 					</div>
@@ -32,13 +32,13 @@
 				<button class="cool-btn" @click="sendMessage">Send</button>
 			</div>
 		</div>
-		<div class="chat-placeholder" v-if="!current_conversation">
+		<div class="chat-placeholder" v-if="current_conversation==='unchosen'">
 			<img src="/img/paper-plane.svg" alt="">
 			<h1>Choose a convertsation</h1>
 		</div>
 		<div class="conversations">
 			<div class="conversations-wrapper" v-if="!searching">
-				<div :class="['conversation', {'active-conversation' : (activeConversation==conversation.id)}]" v-for="conversation in conversations" @click="getConversation(conversation.id);activate(conversation.id)">
+				<div :class="['conversation', {'active-conversation' : (activeConversation==conversation.id)}]" v-for="conversation in conversations" @click="getConversation(conversation.id,conversation.users);activate(conversation.id)">
 					<div>
 						<img :src="conversation.users[0].avatar" alt="">
 					</div>
@@ -49,7 +49,7 @@
 				</div>
 			</div>
 			<div class="conversations-wrapper search-results" v-if="searching">
-				<div v-for="user in result" class="conversation" @click="getFoundConversation(user.id)">
+				<div v-for="user in result" class="conversation" @click="getFoundConversation(user)">
 					<div>
 						<img :src="user.avatar" alt="">
 					</div>
@@ -138,7 +138,6 @@
 	.chat-placeholder{
 		flex:1;
 		display:flex;
-		justify-content: center;
 		position: relative;
 		align-items: center;
 		width:auto;
@@ -147,6 +146,13 @@
 		flex-direction: column;
 	}
 
+	.chat-placeholder{
+		justify-content:center;
+	}
+
+	.chat{
+		justify-content: space-between;
+	}
 
 	.chat-placeholder{
 		color:#57606f;
@@ -276,8 +282,9 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		flex-shrink:0;
 		width:100%;
-		height:100px;
+		height:80px;
 
 		h3{
 			text-transform:capitalize;
@@ -297,7 +304,6 @@
 			align-items: center;
 			width:100%;
 			color:#57606f;
-		    background: #dfe4ea;
 			flex-direction: column;
 			padding:0;
 		}
@@ -311,6 +317,36 @@
 		    width: 100%;
 		    text-transform: uppercase;
 			transition:all .2s;
+			box-sizing: border-box;
+		   	position:relative;
+
+
+			&:after{
+			   	content:'';
+			   	position:absolute;
+			   	top:0;
+			   	bottom:0;
+			   	background: transparent;
+			   	left: 30px;
+			   	right: 30px;
+				border-bottom: 1px solid #e6e8ea;
+		   	}
+
+		   	&:nth-of-type(1):before{
+		   		content:'';
+			   	position:absolute;
+			   	top:0;
+			   	bottom:0;
+			   	background: transparent;
+			   	left: 30px;
+			   	right: 30px;
+				border-top: 1px solid #e6e8ea;
+		   	}
+
+			&:hover{
+			    background: #dfe4ea;
+			    border-right: 5px solid #70a1ff;
+			}
 
 			p{
 			    position:relative;
@@ -335,13 +371,9 @@
 			}
 
 			&:nth-of-type(3):hover{
-		    	background:#ff4757;
+			    border-right: 5px solid #ff4757;
 			}
 
-		    &:hover{
-		    	background:#70a1ff;
-		    	color:#fff;
-		    }
 		}
 			
 	}
@@ -445,9 +477,10 @@
 				userName:'',
 				userAvatar:'',
 				message: '',
-				current_conversation:'',
+				current_conversation:'unchosen',
 				conversations:'',
 				activeConversation:'',
+				currentContact:'',
 				keyword:'',
 				searching:'',
 				result:''
@@ -485,7 +518,9 @@
 			sendMessage(){
 				var Ref=this;
 				axios.post('/api/message/send?token='+this.token,
-					{conversation_id: this.current_conversation.id, body: this.message})
+					{conversation_id: (this.current_conversation)? this.current_conversation.id : null , 
+						body: this.message,
+						to: this.currentContact.id})
 				.then(response =>{
 					if (response.status==201) Ref.message='';
 				})
@@ -494,11 +529,12 @@
 				});
 			},
 
-			getConversation(id){
+			getConversation(id,users){
 				var Ref=this;
 				axios.post('/api/conversation/get?token='+this.token,
 					{conversation_id: id})
 				.then(response =>{
+					this.currentContact=users[0];
 					Ref.current_conversation=response.data.conversation;
 				})
 				.catch(error =>{
@@ -514,19 +550,24 @@
 				axios.post('/api/user/find?token='+this.token,
 					{keyword: this.keyword})
 				.then(response =>{
-					this.result=response.data.users;
+					Ref.result=response.data.users;
 				})
 				.catch(error =>{
 					console.log(error);
 				});
 			},
 
-			getFoundConversation(id){
+			getFoundConversation(user){
 				this.searching=false;
 				var Ref=this;
+				this.keyword='';
 				axios.post('/api/user/find/conversation?token='+this.token,
-					{id: id})
+					{id: user.id})
 				.then(response =>{
+					this.currentContact=user;
+					// if(response.data.conversation===null){
+					// 	console.log(user);
+					// }
 					this.current_conversation=response.data.conversation;
 				})
 				.catch(error =>{
