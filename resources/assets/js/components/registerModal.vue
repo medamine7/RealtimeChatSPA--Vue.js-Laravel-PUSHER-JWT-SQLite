@@ -84,7 +84,7 @@
 		            password_confirmation: this.password_confirmation
 		        })
 	          .then(function (response) {
-	            console.log(response);
+	            // console.log(response);
 	          })
 	          .catch(function (error) {
 	            console.log(error);

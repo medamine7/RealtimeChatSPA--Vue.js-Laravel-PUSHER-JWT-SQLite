@@ -17918,7 +17918,7 @@ __WEBPACK_IMPORTED_MODULE_1_axios___default.a.defaults.headers.common['X-Request
 				password: this.password,
 				password_confirmation: this.password_confirmation
 			}).then(function (response) {
-				console.log(response);
+				// console.log(response);
 			}).catch(function (error) {
 				console.log(error);
 			});
@@ -18284,7 +18284,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n.chat-container {\n  background: #fff;\n  height: 100vh;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n}\n.sidebar,\n.conversations {\n  position: relative;\n  height: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  background: #f5f6fa;\n  width: 300px;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.conversations {\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}\n.conversations h3 {\n    text-transform: capitalize;\n}\n.conversation-search {\n  border-top: 1px solid #e6e8ea;\n  padding: 5px;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  width: 100%;\n}\n.conversation-search .cool-input {\n    outline: none;\n}\n.conversations-wrapper {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  width: 100%;\n}\n.avatar-container {\n  width: 100px;\n  height: 100px;\n  border-radius: 50%;\n  position: relative;\n}\n.avatar-container .avatar {\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    overflow: hidden;\n    border-radius: 50%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    width: 100%;\n    height: 100%;\n}\n.avatar-container img {\n    width: 110%;\n    height: auto;\n}\n.chat,\n.chat-placeholder {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  position: relative;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  width: auto;\n  height: 100%;\n  padding: 0 10px;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n.chat-placeholder {\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n.chat {\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}\n.chat-placeholder {\n  color: #57606f;\n}\n.chat-placeholder img {\n    height: auto;\n    width: 100px;\n}\n.chat-content {\n  height: 100%;\n  width: 100%;\n  overflow-y: auto;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: reverse;\n      -ms-flex-direction: column-reverse;\n          flex-direction: column-reverse;\n  /* width */\n  /* Track */\n  /* Handle */\n  /* Handle on hover */\n}\n.chat-content::-webkit-scrollbar {\n    width: 10px;\n}\n.chat-content::-webkit-scrollbar-track {\n    background: #f1f1f1;\n}\n.chat-content::-webkit-scrollbar-thumb {\n    background: #ced6e0;\n    border-radius: 20px;\n}\n.chat-content::-webkit-scrollbar-thumb:hover {\n    background: #aeb5bd;\n}\n.own-message {\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n}\n.own-message p {\n    background: #1e90ff;\n}\n.own-message .message-wrapper {\n    -webkit-box-pack: end;\n        -ms-flex-pack: end;\n            justify-content: flex-end;\n}\n.other-message p {\n  background: #747d8c;\n}\n.message {\n  width: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-negative: 0;\n      flex-shrink: 0;\n}\n.message p {\n    border-radius: 20px;\n    padding: 7px 10px;\n    word-break: break-word;\n    color: #fff;\n    display: inline-block;\n    margin: 5px;\n}\n.message .message-wrapper {\n    width: 50%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n}\n.chat-avatar {\n  height: 30px;\n  margin-right: 5px;\n  width: 30px;\n  border-radius: 50%;\n  overflow: hidden;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.chat-avatar img {\n    width: 110%;\n    height: auto;\n}\n.text-field {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  min-height: 100px;\n  margin-top: 20px;\n  border-top: 1px solid #e6e8ea;\n}\n.text-field .cool-btn {\n    width: 100px !important;\n    font-size: 15px;\n    margin: 0 5px;\n}\n.text-field textarea {\n    font-family: karla;\n    border: none;\n    border: 1px solid #e6e8ea;\n    font-size: 16px;\n    border-radius: 20px;\n    min-height: 1em;\n    padding: 10px;\n    outline: none;\n    width: auto;\n    resize: none;\n    -webkit-box-flex: 1;\n        -ms-flex: 1;\n            flex: 1;\n}\n.chat-header {\n  border-bottom: 1px solid #e6e8ea;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-negative: 0;\n      flex-shrink: 0;\n  width: 100%;\n  height: 80px;\n}\n.chat-header h3 {\n    text-transform: capitalize;\n}\n.sidebar {\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n.sidebar h3 {\n    text-transform: capitalize;\n}\n.sidebar ul {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    width: 100%;\n    color: #57606f;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    padding: 0;\n}\n.sidebar li {\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    padding: 20px 0;\n    cursor: pointer;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    width: 100%;\n    text-transform: uppercase;\n    -webkit-transition: all .2s;\n    transition: all .2s;\n    -webkit-box-sizing: border-box;\n            box-sizing: border-box;\n    position: relative;\n}\n.sidebar li:after {\n      content: '';\n      position: absolute;\n      top: 0;\n      bottom: 0;\n      background: transparent;\n      left: 30px;\n      right: 30px;\n      border-bottom: 1px solid #e6e8ea;\n}\n.sidebar li:nth-of-type(1):before {\n      content: '';\n      position: absolute;\n      top: 0;\n      bottom: 0;\n      background: transparent;\n      left: 30px;\n      right: 30px;\n      border-top: 1px solid #e6e8ea;\n}\n.sidebar li:hover {\n      background: #dfe4ea;\n      border-right: 5px solid #70a1ff;\n}\n.sidebar li p {\n      position: relative;\n      margin: 0;\n      padding: 0;\n}\n.sidebar li p span {\n        height: 15px;\n        width: auto;\n        padding: 0 5px;\n        font-size: 12px;\n        background: #da7079;\n        position: absolute;\n        color: #fff;\n        top: -5px;\n        right: -11px;\n        display: -webkit-box;\n        display: -ms-flexbox;\n        display: flex;\n        -webkit-box-pack: center;\n            -ms-flex-pack: center;\n                justify-content: center;\n        -webkit-box-align: center;\n            -ms-flex-align: center;\n                align-items: center;\n        border-radius: 50%;\n}\n.sidebar li:nth-of-type(3):hover {\n      border-right: 5px solid #ff4757;\n}\n.conversation {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n  padding: 10px;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  -webkit-transition: all .2s;\n  transition: all .2s;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  cursor: pointer;\n  color: #57606f;\n  position: relative;\n}\n.conversation:hover {\n    background: #dfe4ea;\n}\n.conversation:after {\n    content: '';\n    position: absolute;\n    top: 0;\n    bottom: 0;\n    background: transparent;\n    left: 10px;\n    right: 10px;\n    border-bottom: 1px solid #e6e8ea;\n}\n.conversation h3 {\n    font-weight: normal;\n    margin: 0 10px;\n}\n.conversation div:nth-of-type(1) {\n    width: 100px;\n    height: 100px;\n    border-radius: 50%;\n    position: relative;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    overflow: hidden;\n    border-radius: 50%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    width: 50px;\n    height: 50px;\n}\n.conversation div:nth-of-type(1) img {\n      width: 110%;\n      height: auto;\n}\n.conversation div:nth-of-type(2) {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    padding: 0 10px;\n    width: 60%;\n}\n.conversation div:nth-of-type(2) p {\n      margin: 0;\n      width: 100%;\n      margin: 0;\n      white-space: nowrap;\n      text-overflow: ellipsis;\n      width: 100%;\n      overflow: hidden;\n}\n.conversation div:nth-of-type(2) h3 {\n      width: 100%;\n}\n.active-conversation {\n  background: #dfe4ea !important;\n  border-left: 5px solid #70a1ff;\n}\nli {\n  list-style: none;\n}\n", ""]);
+exports.push([module.i, "\n.chat-container {\n  background: #fff;\n  height: 100vh;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n}\n.sidebar,\n.conversations {\n  position: relative;\n  height: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  background: #f5f6fa;\n  width: 300px;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.conversations {\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}\n.conversations h3 {\n    text-transform: capitalize;\n}\n.conversation-search {\n  border-top: 1px solid #e6e8ea;\n  padding: 5px;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  width: 100%;\n}\n.conversation-search .cool-input {\n    outline: none;\n}\n.conversations-wrapper {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  width: 100%;\n}\n.avatar-container {\n  width: 100px;\n  height: 100px;\n  border-radius: 50%;\n  position: relative;\n}\n.avatar-container .avatar {\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    overflow: hidden;\n    border-radius: 50%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    width: 100%;\n    height: 100%;\n}\n.avatar-container img {\n    width: 110%;\n    height: auto;\n}\n.chat,\n.chat-placeholder {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  position: relative;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  width: auto;\n  height: 100%;\n  padding: 0 10px;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n.chat-placeholder {\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n.chat {\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}\n.chat-placeholder {\n  color: #57606f;\n}\n.chat-placeholder img {\n    height: auto;\n    width: 100px;\n}\n.chat-content {\n  height: 100%;\n  width: 100%;\n  overflow-y: auto;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: reverse;\n      -ms-flex-direction: column-reverse;\n          flex-direction: column-reverse;\n  /* width */\n  /* Track */\n  /* Handle */\n  /* Handle on hover */\n}\n.chat-content::-webkit-scrollbar {\n    width: 10px;\n}\n.chat-content::-webkit-scrollbar-track {\n    background: #f1f1f1;\n}\n.chat-content::-webkit-scrollbar-thumb {\n    background: #ced6e0;\n    border-radius: 20px;\n}\n.chat-content::-webkit-scrollbar-thumb:hover {\n    background: #aeb5bd;\n}\n.own-message {\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n}\n.own-message p {\n    background: #1e90ff;\n}\n.own-message .message-wrapper {\n    -webkit-box-pack: end;\n        -ms-flex-pack: end;\n            justify-content: flex-end;\n}\n.other-message p {\n  background: #747d8c;\n}\n.message {\n  width: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-negative: 0;\n      flex-shrink: 0;\n}\n.message p {\n    border-radius: 20px;\n    padding: 7px 10px;\n    word-break: break-word;\n    color: #fff;\n    display: inline-block;\n    margin: 5px;\n}\n.message .message-wrapper {\n    width: 50%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n}\n.chat-avatar {\n  height: 30px;\n  margin-right: 5px;\n  width: 30px;\n  border-radius: 50%;\n  overflow: hidden;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.chat-avatar img {\n    width: 110%;\n    height: auto;\n}\n.text-field {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  min-height: 100px;\n  margin-top: 20px;\n  border-top: 1px solid #e6e8ea;\n}\n.text-field .cool-btn {\n    width: 100px !important;\n    font-size: 15px;\n    margin: 0 5px;\n}\n.text-field textarea {\n    font-family: karla;\n    border: none;\n    border: 1px solid #e6e8ea;\n    font-size: 16px;\n    border-radius: 20px;\n    min-height: 1em;\n    padding: 10px;\n    outline: none;\n    width: auto;\n    resize: none;\n    -webkit-box-flex: 1;\n        -ms-flex: 1;\n            flex: 1;\n}\n.chat-header {\n  border-bottom: 1px solid #e6e8ea;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-negative: 0;\n      flex-shrink: 0;\n  width: 100%;\n  height: 80px;\n}\n.chat-header h3 {\n    text-transform: capitalize;\n}\n.sidebar {\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n.sidebar .main-menu {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    width: 100%;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-flex: 1;\n        -ms-flex: 1;\n            flex: 1;\n}\n.sidebar #avatar-input {\n    opacity: 0;\n    position: absolute;\n    left: -500px;\n}\n.sidebar .settings {\n    position: absolute;\n    -ms-flex-pack: distribute;\n        justify-content: space-around;\n    top: 0;\n    left: 0;\n    z-index: 3;\n    background: #f5f6fa;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    right: 0;\n    bottom: 0;\n    padding: 10px 20px;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n}\n.sidebar .settings .cool-btn {\n      width: 125px;\n      height: 30px;\n      font-size: 12px;\n}\n.sidebar .settings .cool-btn:disabled {\n        -webkit-box-shadow: none;\n                box-shadow: none;\n        background: #c3c3c3;\n        cursor: default;\n        -webkit-transition: all .2s;\n        transition: all .2s;\n}\n.sidebar .settings .avatar-container {\n      cursor: pointer;\n      overflow: hidden;\n}\n.sidebar .settings .avatar-container span {\n        position: absolute;\n        top: 0;\n        left: 0;\n        -webkit-box-pack: center;\n            -ms-flex-pack: center;\n                justify-content: center;\n        display: -webkit-box;\n        display: -ms-flexbox;\n        display: flex;\n        right: 0;\n        bottom: 0;\n        background: #000;\n        color: #fff;\n        opacity: 0;\n        -webkit-transition: all .2s;\n        transition: all .2s;\n        font-size: 40px;\n        -webkit-box-align: center;\n            -ms-flex-align: center;\n                align-items: center;\n        z-index: 4;\n}\n.sidebar .settings .avatar-container:hover span {\n        opacity: 0.8;\n}\n.sidebar .settings h1, .sidebar .settings h5 {\n      margin: 0;\n}\n.sidebar .settings h5 {\n      border-top: 1px solid #d0d0d0;\n      padding-top: 20px;\n      width: 100%;\n      text-align: center;\n}\n.sidebar .settings .arrow-back {\n      cursor: pointer;\n      color: #70a1ff;\n}\n.sidebar .settings h5 {\n      font-size: 20px;\n      text-transform: uppercase;\n      color: #57606f;\n}\n.sidebar h3 {\n    text-transform: capitalize;\n}\n.sidebar ul {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    width: 100%;\n    color: #57606f;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    padding: 0;\n}\n.sidebar li {\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    padding: 20px 0;\n    cursor: pointer;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    width: 100%;\n    text-transform: uppercase;\n    -webkit-transition: all .2s;\n    transition: all .2s;\n    -webkit-box-sizing: border-box;\n            box-sizing: border-box;\n    position: relative;\n}\n.sidebar li:after {\n      content: '';\n      position: absolute;\n      top: 0;\n      bottom: 0;\n      background: transparent;\n      left: 30px;\n      right: 30px;\n      border-bottom: 1px solid #e6e8ea;\n}\n.sidebar li:nth-of-type(1):before {\n      content: '';\n      position: absolute;\n      top: 0;\n      bottom: 0;\n      background: transparent;\n      left: 30px;\n      right: 30px;\n      border-top: 1px solid #e6e8ea;\n}\n.sidebar li:hover {\n      background: #dfe4ea;\n      border-right: 5px solid #70a1ff;\n}\n.sidebar li p {\n      position: relative;\n      margin: 0;\n      padding: 0;\n}\n.sidebar li p span {\n        height: 15px;\n        width: auto;\n        padding: 0 5px;\n        font-size: 12px;\n        background: #da7079;\n        position: absolute;\n        color: #fff;\n        top: -5px;\n        right: -11px;\n        display: -webkit-box;\n        display: -ms-flexbox;\n        display: flex;\n        -webkit-box-pack: center;\n            -ms-flex-pack: center;\n                justify-content: center;\n        -webkit-box-align: center;\n            -ms-flex-align: center;\n                align-items: center;\n        border-radius: 50%;\n}\n.sidebar li:nth-of-type(3):hover {\n      border-right: 5px solid #ff4757;\n}\n.conversation {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  width: 100%;\n  padding: 10px;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  -webkit-transition: all .2s;\n  transition: all .2s;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  cursor: pointer;\n  color: #57606f;\n  position: relative;\n}\n.conversation:hover {\n    background: #dfe4ea;\n}\n.conversation:after {\n    content: '';\n    position: absolute;\n    top: 0;\n    bottom: 0;\n    background: transparent;\n    left: 10px;\n    right: 10px;\n    border-bottom: 1px solid #e6e8ea;\n}\n.conversation h3 {\n    font-weight: normal;\n    margin: 0 10px;\n}\n.conversation div:nth-of-type(1) {\n    width: 100px;\n    height: 100px;\n    border-radius: 50%;\n    position: relative;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    overflow: hidden;\n    border-radius: 50%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    width: 50px;\n    height: 50px;\n}\n.conversation div:nth-of-type(1) img {\n      width: 110%;\n      height: auto;\n}\n.conversation div:nth-of-type(2) {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    padding: 0 10px;\n    width: 60%;\n}\n.conversation div:nth-of-type(2) p {\n      margin: 0;\n      width: 100%;\n      margin: 0;\n      white-space: nowrap;\n      text-overflow: ellipsis;\n      width: 100%;\n      overflow: hidden;\n}\n.conversation div:nth-of-type(2) h3 {\n      width: 100%;\n}\n.active-conversation {\n  background: #dfe4ea !important;\n  border-left: 5px solid #70a1ff;\n}\n.conversations-placeholder {\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  align-items: center;\n  padding: 20px;\n  text-align: center;\n  height: 100%;\n  color: #57606f;\n}\n.conversations-placeholder h3 {\n    text-transform: none;\n}\n.conversations-placeholder img {\n    width: 80px;\n}\nli {\n  list-style: none;\n}\n", ""]);
 
 // exports
 
@@ -18764,6 +18764,144 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -18775,6 +18913,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			userId: '',
 			userName: '',
 			userAvatar: '',
+			tempUserAvatar: '',
 			message: '',
 			current_conversation: 'unchosen',
 			conversations: '',
@@ -18782,7 +18921,10 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			currentContact: '',
 			keyword: '',
 			searching: '',
-			result: ''
+			result: '',
+			settings: false,
+			password: '',
+			newPassword: ''
 		};
 	},
 	created: function created() {
@@ -18792,7 +18934,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			Ref.userId = userResponse.data.user.id;
 			Ref.userName = userResponse.data.user.name;
 			Ref.userAvatar = userResponse.data.user.avatar;
-
+			Ref.tempUserAvatar = Ref.userAvatar;
 			Ref.conversations = conversationsResponse.data.conversations;
 		})).catch(function (error) {
 			console.log(error);
@@ -18804,6 +18946,9 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 		logout: function logout() {
 			localStorage.removeItem('token');
 			this.$router.push({ name: 'home' });
+		},
+		browseNewAvatar: function browseNewAvatar() {
+			$('#avatar-input').click();
 		},
 		activate: function activate(id) {
 			this.activeConversation = id;
@@ -18855,6 +19000,28 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			}).catch(function (error) {
 				console.log(error);
 			});
+		},
+		changeAvatarInit: function changeAvatarInit(e) {
+			var _this3 = this;
+
+			var fileReader = new FileReader();
+
+			fileReader.readAsDataURL(e.target.files[0]);
+			fileReader.onload = function (e) {
+				_this3.tempUserAvatar = e.target.result;
+				$('#save-avatar').removeAttr('disabled');
+			};
+		},
+		submitAvatarChange: function submitAvatarChange() {
+			var Ref = this;
+			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/user/avatar?token=' + this.token, {
+				avatar: this.tempUserAvatar,
+				user_id: this.userId
+			}).then(function (response) {
+				Ref.userAvatar = response.data.new_path;
+			}).catch(function (error) {
+				console.log(error);
+			});
 		}
 	}
 });
@@ -18868,23 +19035,163 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "chat-container" }, [
-    _c("div", { staticClass: "sidebar" }, [
-      _c("div", { staticClass: "avatar-container" }, [
-        _c("div", { staticClass: "avatar" }, [
-          _c("img", { attrs: { src: _vm.userAvatar, alt: "" } })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("h3", [_vm._v(_vm._s(_vm.userName))]),
-      _vm._v(" "),
-      _c("ul", [
-        _vm._m(0),
+    _c(
+      "div",
+      { staticClass: "sidebar" },
+      [
+        _c("div", { staticClass: "main-menu" }, [
+          _c("div", { staticClass: "avatar-container" }, [
+            _c("div", { staticClass: "avatar" }, [
+              _c("img", { attrs: { src: _vm.userAvatar, alt: "" } })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("h3", [_vm._v(_vm._s(_vm.userName))]),
+          _vm._v(" "),
+          _c("ul", [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "li",
+              {
+                on: {
+                  click: function($event) {
+                    _vm.settings = true
+                  }
+                }
+              },
+              [_c("p", [_vm._v("settings")])]
+            ),
+            _vm._v(" "),
+            _c("li", { on: { click: _vm.logout } }, [
+              _c("p", [_vm._v("log out")])
+            ])
+          ])
+        ]),
         _vm._v(" "),
-        _vm._m(1),
-        _vm._v(" "),
-        _c("li", { on: { click: _vm.logout } }, [_c("p", [_vm._v("log out")])])
-      ])
-    ]),
+        _c(
+          "transition",
+          {
+            attrs: {
+              name: "custom-classes-transition",
+              "enter-active-class": "animated fadeInLeft",
+              "leave-active-class": "animated fadeOutLeft"
+            }
+          },
+          [
+            _vm.settings
+              ? _c("div", { staticClass: "settings" }, [
+                  _c(
+                    "h1",
+                    {
+                      staticClass: "arrow-back",
+                      on: {
+                        click: function($event) {
+                          _vm.settings = false
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fas fa-arrow-left" })]
+                  ),
+                  _vm._v(" "),
+                  _c("h5", [_vm._v("Change avatar")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    attrs: { type: "file", id: "avatar-input" },
+                    on: { change: _vm.changeAvatarInit }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "avatar-container",
+                      on: { click: _vm.browseNewAvatar }
+                    },
+                    [
+                      _c("span", [_c("i", { staticClass: "fas fa-camera" })]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "avatar" }, [
+                        _c("img", {
+                          attrs: { src: _vm.tempUserAvatar, alt: "" }
+                        })
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "cool-btn",
+                      attrs: { id: "save-avatar", disabled: "" },
+                      on: { click: _vm.submitAvatarChange }
+                    },
+                    [_vm._v("Save avatar")]
+                  ),
+                  _vm._v(" "),
+                  _c("h5", [_vm._v("Change password")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.password,
+                        expression: "password"
+                      }
+                    ],
+                    staticClass: "cool-input",
+                    attrs: { type: "text", placeholder: "Your Password" },
+                    domProps: { value: _vm.password },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.password = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newPassword,
+                        expression: "newPassword"
+                      }
+                    ],
+                    staticClass: "cool-input",
+                    attrs: { type: "text", placeholder: "New Password" },
+                    domProps: { value: _vm.newPassword },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.newPassword = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "cool-btn",
+                      attrs: {
+                        id: "save-password",
+                        disabled: !_vm.password || !_vm.newPassword
+                      }
+                    },
+                    [_vm._v("Save password")]
+                  )
+                ])
+              : _vm._e()
+          ]
+        )
+      ],
+      1
+    ),
     _vm._v(" "),
     _vm.current_conversation !== "unchosen"
       ? _c("div", { staticClass: "chat" }, [
@@ -18978,7 +19285,7 @@ var render = function() {
       : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "conversations" }, [
-      !_vm.searching
+      !_vm.searching && _vm.conversations.length !== 0
         ? _c(
             "div",
             { staticClass: "conversations-wrapper" },
@@ -19016,6 +19323,18 @@ var render = function() {
               )
             })
           )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.conversations.length === 0 && !_vm.searching
+        ? _c("div", { staticClass: "conversations-placeholder" }, [
+            _c("img", { attrs: { src: "/img/friends.svg", alt: "" } }),
+            _vm._v(" "),
+            _c("h3", [
+              _vm._v(
+                "Hurray! you have arrived, now search for friends and start the adventure."
+              )
+            ])
+          ])
         : _vm._e(),
       _vm._v(" "),
       _vm.searching
@@ -19080,12 +19399,6 @@ var staticRenderFns = [
     return _c("li", [
       _c("p", [_vm._v("Unread Messages"), _c("span", [_vm._v("3")])])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", [_c("p", [_vm._v("settings")])])
   }
 ]
 render._withStripped = true

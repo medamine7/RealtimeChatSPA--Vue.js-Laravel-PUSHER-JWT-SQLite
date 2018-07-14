@@ -96,4 +96,35 @@ class UserController extends Controller
         ->first();
         return response()->json(compact('conversation'),200);
     }
+
+
+
+    public function changeAvatar(Request $request){
+
+        $avatarBase64= $request->get('avatar');
+        $user_id=$request->get('user_id');
+
+
+        $exploded=explode(',' , $avatarBase64);
+        $avatarBase64_decoded=base64_decode($exploded[1]);
+
+        $extension= str_contains($exploded[0],'jpeg')? 'jpg' : 'png';
+
+
+        $avatar_name = "avatar-".time().'-'.$user_id.'.'.$extension;
+
+        $path = public_path().'/img/' . $avatar_name;
+
+        file_put_contents($path, $avatarBase64_decoded);
+
+
+        $user= User::find($user_id);
+        $user->avatar='/img/'.$avatar_name;
+        $user->save();
+
+
+        return response()->json(['message'=>'avatar changed',
+            'new_path' => $user->avatar]
+            ,200);
+    }
 }

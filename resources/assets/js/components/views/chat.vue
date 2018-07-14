@@ -1,17 +1,41 @@
 <template>
 	<div class="chat-container">
 		<div class="sidebar">
-			<div class="avatar-container">
-				<div class="avatar">
-					<img :src="userAvatar" alt="">
+			<div class="main-menu">
+				<div class="avatar-container">
+					<div class="avatar">
+						<img :src="userAvatar" alt="">
+					</div>
 				</div>
+				<h3>{{userName}}</h3>
+				<ul>
+					<li><p>Unread Messages<span>3</span></p></li>
+					<li @click="settings=true"><p>settings</p></li>
+					<li @click="logout"><p>log out</p></li>
+				</ul>
 			</div>
-			<h3>{{userName}}</h3>
-			<ul>
-				<li><p>Unread Messages<span>3</span></p></li>
-				<li><p>settings</p></li>
-				<li @click="logout"><p>log out</p></li>
-			</ul>
+			 <transition
+			    name="custom-classes-transition"
+			    enter-active-class="animated fadeInLeft"
+			    leave-active-class="animated fadeOutLeft"
+			  >
+				<div class="settings" v-if="settings">
+					<h1 @click="settings=false" class="arrow-back"><i class="fas fa-arrow-left"></i></h1>
+					<h5>Change avatar</h5>
+					<input type="file" id="avatar-input" @change="changeAvatarInit">
+					<div class="avatar-container" @click="browseNewAvatar">
+						<span><i class="fas fa-camera"></i></span>
+						<div class="avatar">
+							<img :src="tempUserAvatar" alt="">
+						</div>
+					</div>
+					<button id="save-avatar" class="cool-btn" disabled @click="submitAvatarChange">Save avatar</button>					
+					<h5>Change password</h5>
+					<input type="text" class="cool-input" placeholder="Your Password" v-model="password">
+					<input type="text" class="cool-input" placeholder="New Password" v-model="newPassword">
+					<button id="save-password" class="cool-btn" :disabled="(!password || !newPassword)">Save password</button>					
+				</div>
+			</transition>
 		</div>
 		<div class="chat" v-if="current_conversation!=='unchosen'">
 			<div class="chat-header">
@@ -37,7 +61,7 @@
 			<h1>Choose a convertsation</h1>
 		</div>
 		<div class="conversations">
-			<div class="conversations-wrapper" v-if="!searching">
+			<div class="conversations-wrapper" v-if="(!searching && conversations.length!==0)">
 				<div :class="['conversation', {'active-conversation' : (activeConversation==conversation.id)}]" v-for="conversation in conversations" @click="getConversation(conversation.id,conversation.users);activate(conversation.id)">
 					<div>
 						<img :src="conversation.users[0].avatar" alt="">
@@ -47,6 +71,10 @@
 						<p>{{conversation.last_message.body}}</p>
 					</div>
 				</div>
+			</div>
+			<div class="conversations-placeholder" v-if="(conversations.length===0 && !searching)">
+				<img src="/img/friends.svg" alt="">
+				<h3>Hurray! you have arrived, now search for friends and start the adventure.</h3>
 			</div>
 			<div class="conversations-wrapper search-results" v-if="searching">
 				<div v-for="user in result" class="conversation" @click="getFoundConversation(user)">
@@ -294,6 +322,97 @@
 	.sidebar{
 		justify-content: center;
 
+		.main-menu{
+			display:flex;
+			width:100%;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			flex:1;
+		}
+
+		#avatar-input{
+			opacity:0;
+			position:absolute;
+			left:-500px;
+		}
+
+		.settings{
+			position:absolute;
+			justify-content: space-around;
+			top:0;
+			left:0;
+			z-index:3;
+			background:#f5f6fa;
+			align-items: center;
+			right:0;
+			bottom:0;
+			padding:10px 20px;
+			display: flex;
+			flex-direction: column;
+
+			.cool-btn{
+				width: 125px;
+			    height: 30px;
+			    font-size: 12px;
+				&:disabled{
+					box-shadow:none;
+					background:#c3c3c3;
+					cursor: default;
+					transition: all .2s;
+				}
+			}
+			.avatar-container{
+				cursor:pointer;
+				overflow:hidden;
+
+				span{
+					position: absolute;
+				    top: 0;
+				    left: 0;
+				    justify-content: center;
+				    display: flex;
+				    right: 0;
+				    bottom: 0;
+				    background: #000;
+				    color: #fff;
+				    opacity: 0;
+				    transition: all .2s;
+				    font-size: 40px;
+				    align-items: center;
+				    z-index: 4;
+				}
+
+				&:hover span{
+					opacity:0.8;
+				}
+				
+			}
+
+
+			h1,h5{
+				margin:0;
+			}
+
+			h5{
+				border-top: 1px solid #d0d0d0;
+			    padding-top: 20px;
+			    width: 100%;
+			    text-align: center;
+			}
+
+			.arrow-back{
+				cursor:pointer;
+				color:#70a1ff;
+			}
+
+			h5{
+			    font-size: 20px;
+				text-transform: uppercase;
+				color:#57606f;
+			}
+		}
+
 		h3{
 			text-transform: capitalize;
 		}
@@ -458,6 +577,25 @@
 	   	border-left: 5px solid #70a1ff;
 	}
 	
+	.conversations-placeholder{
+	    justify-content: center;
+	    display: flex;
+	    align-items: center;
+	    flex-direction: column;
+	    align-items: center;
+	    padding:20px;
+	    text-align: center;
+	    height: 100%;
+	    color: #57606f;
+
+	    h3{
+	        text-transform: none;
+	    }
+
+	    img{
+	    	width:80px;
+	    }
+	}
 
 	li{
 		list-style:none;
@@ -476,6 +614,7 @@
 				userId:'',
 				userName:'',
 				userAvatar:'',
+				tempUserAvatar:'',
 				message: '',
 				current_conversation:'unchosen',
 				conversations:'',
@@ -483,7 +622,10 @@
 				currentContact:'',
 				keyword:'',
 				searching:'',
-				result:''
+				result:'',
+				settings:false,
+				password:'',
+				newPassword:''
 			}
 		},
 		created(){
@@ -497,7 +639,7 @@
 				Ref.userId=userResponse.data.user.id;
 				Ref.userName=userResponse.data.user.name;
 				Ref.userAvatar=userResponse.data.user.avatar;
-
+				Ref.tempUserAvatar=Ref.userAvatar;
 				Ref.conversations=conversationsResponse.data.conversations;
 			}))
 			.catch(error=>{
@@ -509,6 +651,10 @@
 			logout(){
 				localStorage.removeItem('token');
 				this.$router.push({name:'home'});
+			},
+
+			browseNewAvatar(){
+				$('#avatar-input').click();
 			},
 
 			activate(id){
@@ -573,6 +719,31 @@
 				.catch(error =>{
 					console.log(error);
 				})
+			},
+
+			changeAvatarInit(e){
+				var fileReader = new FileReader();
+
+				fileReader.readAsDataURL(e.target.files[0]);
+				fileReader.onload= e =>{
+					this.tempUserAvatar=e.target.result;
+					$('#save-avatar').removeAttr('disabled');
+				}
+			},
+
+			submitAvatarChange(){
+				var Ref= this;
+				axios.post('/api/user/avatar?token='+this.token,
+				{
+					avatar: this.tempUserAvatar,
+					user_id: this.userId
+				})
+				.then(response=>{
+					Ref.userAvatar=response.data.new_path;
+				})
+				.catch(error=>{
+					console.log(error);
+				});
 			}
 		}
 	}
