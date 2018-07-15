@@ -263,6 +263,7 @@
 		margin-right:5px;
 		width:30px;
 		border-radius:50%;
+		flex-shrink: 0;
 		overflow: hidden;
 		display:flex;
 		justify-content: center;
@@ -645,6 +646,7 @@
 			.catch(error=>{
 				console.log(error);
 			});
+
 		},
 
 		methods:{
@@ -665,10 +667,9 @@
 				var Ref=this;
 				axios.post('/api/message/send?token='+this.token,
 					{conversation_id: (this.current_conversation)? this.current_conversation.id : null , 
-						body: this.message,
-						to: this.currentContact.id})
+						body: this.message})
 				.then(response =>{
-					if (response.status==201) Ref.message='';
+					Ref.message='';
 				})
 				.catch(error =>{
 					console.log(error);
@@ -682,6 +683,15 @@
 				.then(response =>{
 					this.currentContact=users[0];
 					Ref.current_conversation=response.data.conversation;
+
+					Echo.join("chat."+response.data.conversation.id)
+					// .here()
+					//    .joining()
+					//    .leaving()
+					.listen('MessageSent', e =>{
+						this.current_conversation.messages.unshift(e.message);
+					});
+
 				})
 				.catch(error =>{
 					console.log(error);

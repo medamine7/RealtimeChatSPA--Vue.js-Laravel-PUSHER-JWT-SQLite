@@ -7,15 +7,17 @@ use App\Message;
 use App\Conversation;
 use App\Conversation_user;
 use JWTAuth;
+use App\Events\MessageSent;
+
 
 class MessagesController extends Controller
 {
     public function sendMessage(Request $request){
     	$conversation_id=$request->get('conversation_id');
-        $message_to=$request->get('to');
     	$body=$request->get('body');
     	$author_id= JWTAuth::parseToken()->toUser()->id;
 
+        $message;
         
         if( $conversation_id ){
         	$message= new Message([
@@ -55,8 +57,8 @@ class MessagesController extends Controller
         }
 
 
-
-    	// return response()->json(['message'=>'your message was sent successfully!'],201);
-
+        broadcast(new MessageSent($message));
+    	   
+        return response('', 200);
     }
 }

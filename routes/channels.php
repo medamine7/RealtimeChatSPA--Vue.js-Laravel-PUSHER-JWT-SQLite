@@ -14,3 +14,11 @@
 Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+
+Broadcast::channel('chat.{conversation_id}', function ($user, $conversation_id) {
+
+    return App\Conversation_user::where('user_id',$user->id)
+    ->where('conversation_id', $conversation_id)
+    ->first();
+});

@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class MessageSent
+class MessageSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,18 +19,24 @@ class MessageSent
      *
      * @return void
      */
-    public function __construct()
+
+    public $message;
+
+    public function __construct($message)
     {
-        $this->conversation=conversation;
+        $this->message=$message;
     }
 
     /**
      * Get the channels the event should broadcast on.
      *
      * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
+     */ 
+    
+
+    public function broadcastOn(){
+
+        return new PresenceChannel('chat.'.$this->message->conversation_id);
+
     }
 }
