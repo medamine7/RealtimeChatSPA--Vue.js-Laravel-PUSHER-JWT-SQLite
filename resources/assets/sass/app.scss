@@ -47,6 +47,7 @@ body{
 	width:100%;
 	box-sizing: border-box;
 	padding:10px 20px;
+	position:relative;
 	min-height:100px;
 	display:flex;
 	flex-direction: column;
@@ -96,4 +97,22 @@ body{
 	background: #7f8fa6;
 	cursor:pointer;
 	box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);
+	position: relative;
+	overflow: hidden;
+
+	&:after{
+		position: absolute;
+		content:'';
+		left: 0;
+		right: 0;
+		bottom: 0;
+		top: 0;
+		background: rgba(0,0,0,.2);
+		opacity:0;
+		transition: all .2s;
+	}
+
+	&:active:after{
+		opacity:1;
+	}
 }

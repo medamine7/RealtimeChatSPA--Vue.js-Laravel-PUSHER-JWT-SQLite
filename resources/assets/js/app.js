@@ -7,11 +7,17 @@
 import App from './components/app'
 import router from './router'
 import store from './store'
+import VeeValidate from 'vee-validate'
+
+
 
 require('./bootstrap');
 
 window.Vue = require('vue');
 
+Vue.use(VeeValidate, {
+  events: ''
+});
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

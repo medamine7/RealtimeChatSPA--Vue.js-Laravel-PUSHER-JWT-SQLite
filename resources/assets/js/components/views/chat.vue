@@ -37,12 +37,12 @@
 				</div>
 			</transition>
 		</div>
-		<div class="chat" v-if="current_conversation!=='unchosen'">
+		<div class="chat" v-if="chosen">
 			<div class="chat-header">
 				<h3>{{currentContact.name}}</h3>
 			</div>
 			<div class="chat-content" v-if="current_conversation">
-				<div :class="[(message.author_id == userId)? 'own-message' : 'other-message', 'message']" v-for="message in current_conversation.messages" >
+				<div v-if="!loading" :class="[(message.author_id == userId)? 'own-message' : 'other-message', 'message']" v-for="message in current_conversation.messages" >
 					<div class="message-wrapper">
 						<div class="chat-avatar">
 							<img :src="currentContact.avatar" alt="" v-if="message.author_id != userId">
@@ -50,19 +50,20 @@
 						<p>{{message.body}}</p>
 					</div>
 				</div>
+				<img v-show="loading" id="chat-preloader" src="/img/bpreloader.svg" alt="">
 			</div>
 			<div class="text-field">
-				<textarea placeholder="Type in your message here..." v-model="message" @keydown.enter.prevent="sendMessage"></textarea>
+				<textarea placeholder="Type in your message here..." v-model="message" @keydown.enter.prevent="sendMessage" autofocus></textarea>
 				<button class="cool-btn" @click="sendMessage">Send</button>
 			</div>
 		</div>
-		<div class="chat-placeholder" v-if="current_conversation==='unchosen'">
+		<div class="chat-placeholder" v-if="!chosen">
 			<img src="/img/paper-plane.svg" alt="">
 			<h1>Choose a convertsation</h1>
 		</div>
 		<div class="conversations">
 			<div class="conversations-wrapper" v-if="(!searching && conversations.length!==0)">
-				<div :class="['conversation', {'active-conversation' : (activeConversation==conversation.id)}]" v-for="conversation in conversations" @click="getConversation(conversation.id,conversation.users);activate(conversation.id)">
+				<div :class="['conversation', {'active-conversation' : (activeConversation==conversation.id)}]" v-for="conversation in conversations" @click="getConversation(conversation.id,conversation.users[0]);activate(conversation.id)">
 					<div>
 						<img :src="conversation.users[0].avatar" alt="">
 					</div>
@@ -156,8 +157,8 @@
 		}
 
 		img{
-			width: 110%;
-			height: auto;
+			height: 110%;
+			width: auto;
 		}
 	}
 
@@ -192,8 +193,10 @@
 
 
 	.chat-content{
+		position: relative;
 		height:100%;
 		width:100%;
+		padding-bottom: 20px;
 		overflow-y:auto;
 		display: flex;
 		flex-direction: column-reverse;
@@ -270,8 +273,8 @@
 		align-items: center;
 
 		img{
-			width: 110%;
-			height: auto;
+			height: 110%;
+			width: auto;
 		}
 	}
 
@@ -281,7 +284,6 @@
 		width:100%;
 		align-items:center;
 		min-height: 100px;
-		margin-top:20px;
 		border-top: 1px solid #e6e8ea;
 
 		.cool-btn{
@@ -544,8 +546,8 @@
 
 		
 			img{
-				width: 110%;
-				height: auto;
+				height: 110%;
+				width: auto;
 			}
 		}
 
@@ -601,11 +603,22 @@
 	li{
 		list-style:none;
 	}
+
+	#chat-preloader{
+	    position: absolute;
+	    top: 0;
+	    bottom: 0;
+	    margin: auto;
+	    left: 0;
+	    right: 0;
+
+	}
 </style>
 
 
 <script>
 	import axios from 'axios'
+
 	axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 	export default {
 		name:'chat',
@@ -617,7 +630,9 @@
 				userAvatar:'',
 				tempUserAvatar:'',
 				message: '',
-				current_conversation:'unchosen',
+				current_conversation: {
+					messages: []
+				},
 				conversations:'',
 				activeConversation:'',
 				currentContact:'',
@@ -626,11 +641,14 @@
 				result:'',
 				settings:false,
 				password:'',
-				newPassword:''
+				newPassword:'',
+				loading:false,
+				chosen: false
 			}
 		},
 		created(){
 			this.token = localStorage.getItem('token');
+		    Echo.connector.pusher.config.auth.headers['Authorization'] = 'Bearer '+this.token;
 			var Ref= this;
 			axios.all([
 				axios.get('/api/user/info?token='+this.token),
@@ -665,23 +683,35 @@
 
 			sendMessage(){
 				var Ref=this;
+				this.current_conversation.messages.unshift({
+					body: this.message,
+					author_id: this.userId
+				});
+				let messageToSend = this.message;
+				this.message='';
+
 				axios.post('/api/message/send?token='+this.token,
-					{conversation_id: (this.current_conversation)? this.current_conversation.id : null , 
-						body: this.message})
+					{conversation_id: (Ref.current_conversation.messages.length!==0)? Ref.current_conversation.id : null , 
+						body: messageToSend,
+						message_to: this.currentContact.id})
 				.then(response =>{
-					Ref.message='';
+					if (Ref.current_conversation.messages.length ===0) Ref.getConversation(response.data.conversation_id,this.currentContact);
+
 				})
 				.catch(error =>{
 					console.log(error);
 				});
 			},
 
-			getConversation(id,users){
+			getConversation(id,user){
+				this.loading=true;
 				var Ref=this;
+				this.currentContact=user;
 				axios.post('/api/conversation/get?token='+this.token,
 					{conversation_id: id})
 				.then(response =>{
-					this.currentContact=users[0];
+					this.chosen=true;
+					this.loading=false;
 					Ref.current_conversation=response.data.conversation;
 
 					Echo.join("chat."+response.data.conversation.id)
@@ -724,7 +754,8 @@
 					// if(response.data.conversation===null){
 					// 	console.log(user);
 					// }
-					this.current_conversation=response.data.conversation;
+					if(response.data.conversation) Ref.current_conversation=response.data.conversation;
+
 				})
 				.catch(error =>{
 					console.log(error);

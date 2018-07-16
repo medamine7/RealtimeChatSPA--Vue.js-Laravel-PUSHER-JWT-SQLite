@@ -1,11 +1,11 @@
 <template>
 	<div class="container">
 		<div class="art"></div>
-		<login-modal v-show="loginModal"></login-modal>
-		<register-modal v-show="registerModal"></register-modal>
+		<login-modal v-if="loginModal"></login-modal>
+		<register-modal v-if="registerModal"></register-modal>
 		<div class="header">
 			<div class="logo-container">
-				<img src="/img/deercode.png" alt="">
+				<img src="/img/logo.png" alt="">
 			</div>
 			<div class="nav">
 				<ul>
@@ -16,7 +16,7 @@
 			</div>
 		</div>
 		<div class="hero">
-			<h1>Welcome to Chateroo</h1>
+			<h1>Welcome to <img src="/img/logo.png" alt=""></h1>
 			<h5><span>J</span>ust another chatting plateform, but also a reference work that belongs to Mohamed Amine Baladi :)</h5>
 			<div class="btn-container">
 				<button class="cool-btn" @click="openLogin">Login</button>
@@ -61,7 +61,7 @@
 .logo-container{
 
 	img{
-		width:100px;
+		width:130px;
 	}
 }
 
@@ -106,6 +106,13 @@
 
 	h1{
 		font-size:50px;
+	    display: flex;
+	    align-items: center;
+
+		img{
+			width: 230px;
+    		margin: 0 10px;
+		}
 	}
 
 	h5{

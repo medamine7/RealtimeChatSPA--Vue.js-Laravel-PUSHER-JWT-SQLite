@@ -13,7 +13,8 @@ use App\Events\MessageSent;
 class MessagesController extends Controller
 {
     public function sendMessage(Request $request){
-    	$conversation_id=$request->get('conversation_id');
+        $conversation_id=$request->get('conversation_id');
+    	$message_to=$request->get('message_to');
     	$body=$request->get('body');
     	$author_id= JWTAuth::parseToken()->toUser()->id;
 
@@ -31,6 +32,7 @@ class MessagesController extends Controller
         }else{
             $new_conversation = new Conversation();
             $new_conversation->save();
+            $conversation_id=$new_conversation->id;
 
 
             $first_conversation_user = new Conversation_user([
@@ -57,8 +59,8 @@ class MessagesController extends Controller
         }
 
 
-        broadcast(new MessageSent($message));
+        broadcast(new MessageSent($message))->toOthers();
     	   
-        return response('', 200);
+        return response()->json(["conversation_id"=>$conversation_id],200);
     }
 }

@@ -1,5 +1,11 @@
 <template>
-    <router-view/>
+	<transition
+	    name="custom-classes-transition"
+	    enter-active-class="animated fadeIn"
+	    leave-active-class="animated fadeOut"
+	  >
+    	<router-view/>
+    </transition>
 </template>
 
 <script>

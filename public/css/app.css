@@ -3375,6 +3375,7 @@ body {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   padding: 10px 20px;
+  position: relative;
   min-height: 100px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3436,5 +3437,24 @@ body {
   cursor: pointer;
   -webkit-box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);
           box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.cool-btn:after {
+  position: absolute;
+  content: '';
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+}
+
+.cool-btn:active:after {
+  opacity: 1;
 }
 

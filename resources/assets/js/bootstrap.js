@@ -53,9 +53,4 @@ window.Echo = new Echo({
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
     encrypted: true,
-	auth: {
-	        headers: {
-	            Authorization: 'Bearer ' + localStorage.getItem('token'),
-	        },
-	    },
 });
