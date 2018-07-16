@@ -16641,7 +16641,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n.login-modal-container {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background: rgba(0, 0, 0, 0.5);\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  z-index: 8;\n}\n.login-modal-content {\n  width: 400px;\n  margin: auto;\n  -webkit-box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);\n          box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);\n  border-radius: 20px;\n  background: #fff;\n  background: #f5f6fa;\n  -ms-flex-pack: distribute;\n      justify-content: space-around;\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.error-text {\n  font-size: 13px;\n  position: absolute;\n  color: #f57e7d;\n  bottom: -10px;\n  right: 30px;\n}\n.additional {\n  padding-bottom: 10px;\n  height: 25px;\n  font-size: 15px;\n  text-align: right;\n}\n.additional a {\n    color: #0097e6;\n}\n.backend-error {\n  background: #ff4757a1;\n  color: #fff;\n  position: absolute;\n  top: 0;\n  padding: 10px;\n  text-align: center;\n  width: 100%;\n}\n.form-element .cool-btn {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.form-element .cool-btn img {\n    width: 25px;\n}\n", ""]);
+exports.push([module.i, "\n.login-modal-container {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background: rgba(0, 0, 0, 0.5);\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  z-index: 8;\n}\n.login-modal-content {\n  width: 400px;\n  margin: auto;\n  -webkit-box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);\n          box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);\n  border-radius: 20px;\n  background: #fff;\n  background: #f5f6fa;\n  -ms-flex-pack: distribute;\n      justify-content: space-around;\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.error-text {\n  font-size: 13px;\n  position: absolute;\n  color: #f57e7d;\n  bottom: -10px;\n  right: 30px;\n}\n.additional {\n  padding-bottom: 10px;\n  height: 25px;\n  font-size: 15px;\n  text-align: right;\n}\n.additional a {\n    color: #0097e6;\n}\n.backend-error {\n  background: #ff4757a1;\n  color: #fff;\n  position: absolute;\n  top: 0;\n  padding: 10px;\n  text-align: center;\n  width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -16657,19 +16657,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -18021,7 +18008,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n.register-modal-container {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background: rgba(0, 0, 0, 0.5);\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  z-index: 8;\n}\n.register-modal-content {\n  width: 400px;\n  margin: auto;\n  -webkit-box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);\n          box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);\n  border-radius: 20px;\n  background: #fff;\n  background: #f5f6fa;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -ms-flex-pack: distribute;\n      justify-content: space-around;\n  position: relative;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.error-text {\n  font-size: 13px;\n  position: absolute;\n  color: #f57e7d;\n  bottom: -10px;\n  right: 30px;\n}\n.backend-error {\n  background: #ff4757a1;\n  color: #fff;\n  position: absolute;\n  top: 0;\n  padding: 10px;\n  text-align: center;\n  width: 100%;\n}\n", ""]);
+exports.push([module.i, "\n.register-modal-container {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background: rgba(0, 0, 0, 0.5);\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  z-index: 8;\n}\n.register-modal-content {\n  width: 400px;\n  margin: auto;\n  -webkit-box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);\n          box-shadow: 0 10px 43px 5px rgba(0, 0, 0, 0.2);\n  border-radius: 20px;\n  background: #fff;\n  background: #f5f6fa;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -ms-flex-pack: distribute;\n      justify-content: space-around;\n  position: relative;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.error-text {\n  font-size: 13px;\n  position: absolute;\n  color: #f57e7d;\n  bottom: -10px;\n  right: 30px;\n}\n.backend-error {\n  background: #ff4757a1;\n  color: #fff;\n  position: absolute;\n  top: 0;\n  padding: 10px;\n  text-align: center;\n  width: 100%;\n}\n.backend-okay {\n  background: #1eb938a1;\n  color: #fff;\n  position: absolute;\n  top: 0;\n  padding: 10px;\n  text-align: center;\n  width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -18125,6 +18112,25 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -18137,7 +18143,9 @@ __WEBPACK_IMPORTED_MODULE_1_axios___default.a.defaults.headers.common['X-Request
 			email: '',
 			password: '',
 			password_confirmation: '',
-			backendError: ''
+			backendError: '',
+			backendOkay: false,
+			loading: false
 		};
 	},
 
@@ -18146,16 +18154,19 @@ __WEBPACK_IMPORTED_MODULE_1_axios___default.a.defaults.headers.common['X-Request
 			if (e.target == document.querySelector('.register-modal-container')) this.closeRegister();
 		},
 		registerUser: function registerUser() {
+			var Ref = this;
 			__WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/user/register', {
 				name: this.name,
 				email: this.email,
 				password: this.password,
 				password_confirmation: this.password_confirmation
 			}).then(function (response) {
-				// console.log(response);
+				Ref.loading = false;
+
+				if (response.status == 201) Ref.backendOkay = true;
 			}).catch(function (error) {
-				this.backendError = error.response.data.message;
-				this.resetError();
+				Ref.resetError();
+				if (error.response.status == 422) Ref.backendError = "The email has already been taken.";else Ref.backendError = 'invalid data';
 			});
 		},
 		validate: function validate() {
@@ -18163,6 +18174,7 @@ __WEBPACK_IMPORTED_MODULE_1_axios___default.a.defaults.headers.common['X-Request
 
 			this.$validator.validate().then(function (result) {
 				if (result) {
+					_this.loading = true;
 					_this.registerUser();
 				}
 			});
@@ -18221,6 +18233,24 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
+      _c(
+        "transition",
+        {
+          attrs: {
+            name: "custom-classes-transition",
+            "enter-active-class": "animated fadeInDown",
+            "leave-active-class": "animated fadeOutUp"
+          }
+        },
+        [
+          _vm.backendOkay
+            ? _c("span", { staticClass: "backend-okay" }, [
+                _vm._v("Woohoo! You're now registered, go ahead and login.")
+              ])
+            : _vm._e()
+        ]
+      ),
+      _vm._v(" "),
       _c("div", { staticClass: "register-modal-content animated fadeInUp" }, [
         _vm._m(0),
         _vm._v(" "),
@@ -18246,6 +18276,15 @@ var render = function() {
             attrs: { name: "name", type: "text", autofocus: "" },
             domProps: { value: _vm.name },
             on: {
+              keuyp: function($event) {
+                if (
+                  !("button" in $event) &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.validate($event)
+              },
               input: function($event) {
                 if ($event.target.composing) {
                   return
@@ -18294,6 +18333,15 @@ var render = function() {
             attrs: { name: "email", type: "email" },
             domProps: { value: _vm.email },
             on: {
+              keuyp: function($event) {
+                if (
+                  !("button" in $event) &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.validate($event)
+              },
               input: function($event) {
                 if ($event.target.composing) {
                   return
@@ -18343,6 +18391,15 @@ var render = function() {
             attrs: { name: "password", type: "password" },
             domProps: { value: _vm.password },
             on: {
+              keuyp: function($event) {
+                if (
+                  !("button" in $event) &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.validate($event)
+              },
               input: function($event) {
                 if ($event.target.composing) {
                   return
@@ -18393,6 +18450,15 @@ var render = function() {
             attrs: { name: "password repeat", type: "password" },
             domProps: { value: _vm.password_confirmation },
             on: {
+              keuyp: function($event) {
+                if (
+                  !("button" in $event) &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.validate($event)
+              },
               input: function($event) {
                 if ($event.target.composing) {
                   return
@@ -18423,7 +18489,34 @@ var render = function() {
           _c(
             "button",
             { staticClass: "cool-btn", on: { click: _vm.validate } },
-            [_vm._v("Register")]
+            [
+              _c(
+                "span",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: !_vm.loading,
+                      expression: "!loading"
+                    }
+                  ]
+                },
+                [_vm._v("Register")]
+              ),
+              _vm._v(" "),
+              _c("img", {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.loading,
+                    expression: "loading"
+                  }
+                ],
+                attrs: { src: "/img/preloader.svg", alt: "" }
+              })
+            ]
           )
         ])
       ])

@@ -6,30 +6,39 @@
 		    leave-active-class="animated fadeOutUp">
 			<span v-if="backendError" class="backend-error">{{backendError}}</span>		
 		</transition>
+		<transition
+			name="custom-classes-transition"
+		    enter-active-class="animated fadeInDown"
+		    leave-active-class="animated fadeOutUp">
+			<span v-if="backendOkay" class="backend-okay">Woohoo! You're now registered, go ahead and login.</span>	
+		</transition>
 		<div class="register-modal-content animated fadeInUp">
 			<div class="modal-indicator"><span>Register</span></div>
 			<div class="form-element">
 				<label for="name">Name:</label>
-				<input v-validate="'required|max:255'" name="name" class="cool-input" type="text" v-model="name" autofocus>
+				<input @keuyp.enter="validate" v-validate="'required|max:255'" name="name" class="cool-input" type="text" v-model="name" autofocus>
 				<span class="error-text animated fadeInDown" v-show="errors.has('name')">{{ errors.first('name') }}</span>
 			</div>
 			<div class="form-element">
 				<label for="email">Email:</label>
-				<input v-validate="'required|email|max:255|'" name="email" class="cool-input" type="email" v-model="email">
+				<input @keuyp.enter="validate" v-validate="'required|email|max:255|'" name="email" class="cool-input" type="email" v-model="email">
 				<span class="error-text animated fadeInDown" v-show="errors.has('email')">{{ errors.first('email') }}</span>
 			</div>
 			<div class="form-element">
 				<label for="password">Password:</label>
-				<input v-validate="'required|min:6'" name="password" ref="password" class="cool-input" type="password" v-model="password">
+				<input @keuyp.enter="validate" v-validate="'required|min:6'" name="password" ref="password" class="cool-input" type="password" v-model="password">
 				<span class="error-text animated fadeInDown" v-show="errors.has('password')">{{ errors.first('password') }}</span>
 			</div>
 			<div class="form-element">
 				<label for="password">Repeat password:</label>
-				<input v-validate="'required|confirmed:password'" name="password repeat" class="cool-input" type="password" v-model="password_confirmation"> 
+				<input @keuyp.enter="validate" v-validate="'required|confirmed:password'" name="password repeat" class="cool-input" type="password" v-model="password_confirmation"> 
 				<span class="error-text animated fadeInDown" v-show="errors.has('password repeat')">{{ errors.first('password repeat') }}</span>
 			</div>
 			<div class="form-element">
-				<button class="cool-btn" @click="validate">Register</button>
+				<button class="cool-btn" @click="validate">
+					<span v-show="!loading">Register</span>
+					<img v-show="loading" src="/img/preloader.svg" alt="">
+				</button>
 			</div>
 		</div>
 	</div>
@@ -84,6 +93,16 @@
     width: 100%;
 }
 
+.backend-okay{
+	background: #1eb938a1;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
+
 </style>
 
 <script>
@@ -98,7 +117,9 @@
 				email:'',
 				password:'',
 				password_confirmation:'',
-				backendError:''
+				backendError:'',
+				backendOkay: false,
+				loading:false
 			}
 		},
 		methods: {
@@ -109,24 +130,29 @@
 				if(e.target==document.querySelector('.register-modal-container')) this.closeRegister();
 			},
 			registerUser(){
+				var Ref=this;
 				axios.post('/api/user/register', {
 		            name: this.name,
 		            email: this.email,
 		            password: this.password,
 		            password_confirmation: this.password_confirmation
 		        })
-	          .then(function (response) {
-	            // console.log(response);
+	          .then(function (response) {           
+	            Ref.loading=false;
+
+	            if (response.status==201) Ref.backendOkay=true;
 	          })
 	          .catch(function (error) {
-	            	this.backendError=error.response.data.message;
-					this.resetError();
+					Ref.resetError();
+					if(error.response.status==422) Ref.backendError="The email has already been taken.";
+					else Ref.backendError='invalid data';
 	          });
 			},
 
 			validate(){
 				this.$validator.validate().then(result => {
 					if (result) {
+						this.loading=true;
 						this.registerUser();
 					}
 				});
