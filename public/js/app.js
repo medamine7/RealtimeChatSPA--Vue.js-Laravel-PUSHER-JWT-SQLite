@@ -19803,30 +19803,30 @@ var render = function() {
                     "conversation",
                     {
                       "active-conversation":
-                        _vm.activeConversation == conversation.id
+                        _vm.activeConversation == conversation.conversation_id
                     }
                   ],
                   on: {
                     click: function($event) {
                       _vm.getConversation(
-                        conversation.id,
-                        conversation.users[0]
+                        conversation.conversation_id,
+                        conversation.user
                       )
-                      _vm.activate(conversation.id)
+                      _vm.activate(conversation.conversation_id)
                     }
                   }
                 },
                 [
                   _c("div", [
                     _c("img", {
-                      attrs: { src: conversation.users[0].avatar, alt: "" }
+                      attrs: { src: conversation.user.avatar, alt: "" }
                     })
                   ]),
                   _vm._v(" "),
                   _c("div", [
-                    _c("h3", [_vm._v(_vm._s(conversation.users[0].name))]),
+                    _c("h3", [_vm._v(_vm._s(conversation.user.name))]),
                     _vm._v(" "),
-                    _c("p", [_vm._v(_vm._s(conversation.last_message.body))])
+                    _c("p", [_vm._v(_vm._s(conversation.body))])
                   ])
                 ]
               )

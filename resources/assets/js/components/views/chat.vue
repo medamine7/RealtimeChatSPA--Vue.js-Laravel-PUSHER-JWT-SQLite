@@ -63,13 +63,13 @@
 		</div>
 		<div class="conversations">
 			<div class="conversations-wrapper" v-if="(!searching && conversations.length!==0)">
-				<div :class="['conversation', {'active-conversation' : (activeConversation==conversation.id)}]" v-for="conversation in conversations" @click="getConversation(conversation.id,conversation.users[0]);activate(conversation.id)">
+				<div :class="['conversation', {'active-conversation' : (activeConversation==conversation.conversation_id)}]" v-for="conversation in conversations" @click="getConversation(conversation.conversation_id,conversation.user);activate(conversation.conversation_id)">
 					<div>
-						<img :src="conversation.users[0].avatar" alt="">
+						<img :src="conversation.user.avatar" alt="">
 					</div>
 					<div>
-						<h3>{{conversation.users[0].name}}</h3>
-						<p>{{conversation.last_message.body}}</p>
+						<h3>{{conversation.user.name}}</h3>
+						<p>{{conversation.body}}</p>
 					</div>
 				</div>
 			</div>
