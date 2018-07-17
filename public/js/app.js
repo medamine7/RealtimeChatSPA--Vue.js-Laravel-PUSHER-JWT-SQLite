@@ -19799,6 +19799,7 @@ var render = function() {
               return _c(
                 "div",
                 {
+                  key: conversation.id,
                   class: [
                     "conversation",
                     {

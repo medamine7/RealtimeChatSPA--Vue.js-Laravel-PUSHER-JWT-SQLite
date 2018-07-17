@@ -72,13 +72,15 @@ class ConversationsController extends Controller
 
                 ));
             }
+            /***    *************************/
 
             $result=$result->sortByDesc('created_at');
 
+            return response()->json( [
+                'code' => 200,
+                'conversations' => $result->values()
+            ] );
 
 
-            /***    *************************/
-
-            return response()->json(['conversations' => $result] ,200);
     	}
 }
