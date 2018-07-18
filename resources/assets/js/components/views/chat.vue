@@ -714,6 +714,7 @@
 					body: this.message,
 					author_id: this.userId
 				});
+
 				let messageToSend = this.message;
 				this.message='';
 
@@ -732,7 +733,14 @@
 						body: messageToSend,
 						message_to: Ref.currentContact.id})
 				.then(response =>{
-					if (Ref.current_conversation.messages.length ===0) Ref.getConversation(response.data.conversation_id,this.currentContact);
+					if (!Ref.current_conversation.id){
+						this.current_conversation.id=response.data.conversation_id;
+						Echo.join("chat."+response.data.conversation_id)
+						.listen('MessageSent', e =>{
+							if(e.message.conversation_id==this.current_conversation.id) this.current_conversation.messages.unshift(e.message);
+						});
+
+					} 
 
 				})
 				.catch(error =>{
@@ -802,7 +810,9 @@
 					// 	console.log(user);
 					// }
 					if(response.data.conversation) Ref.current_conversation=response.data.conversation;
-
+					else Ref.current_conversation={
+						messages: []
+					};
 				})
 				.catch(error =>{
 					console.log(error);

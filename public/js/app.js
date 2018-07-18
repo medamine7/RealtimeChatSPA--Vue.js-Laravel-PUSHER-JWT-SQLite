@@ -19442,6 +19442,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 				body: this.message,
 				author_id: this.userId
 			});
+
 			var messageToSend = this.message;
 			this.message = '';
 
@@ -19454,7 +19455,12 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/message/send?token=' + this.token, { conversation_id: Ref.current_conversation.messages.length !== 0 ? Ref.current_conversation.id : null,
 				body: messageToSend,
 				message_to: Ref.currentContact.id }).then(function (response) {
-				if (Ref.current_conversation.messages.length === 0) Ref.getConversation(response.data.conversation_id, _this.currentContact);
+				if (!Ref.current_conversation.id) {
+					_this.current_conversation.id = response.data.conversation_id;
+					Echo.join("chat." + response.data.conversation_id).listen('MessageSent', function (e) {
+						if (e.message.conversation_id == _this.current_conversation.id) _this.current_conversation.messages.unshift(e.message);
+					});
+				}
 			}).catch(function (error) {
 				console.log(error);
 			});
@@ -19513,7 +19519,9 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 				// if(response.data.conversation===null){
 				// 	console.log(user);
 				// }
-				if (response.data.conversation) Ref.current_conversation = response.data.conversation;
+				if (response.data.conversation) Ref.current_conversation = response.data.conversation;else Ref.current_conversation = {
+					messages: []
+				};
 			}).catch(function (error) {
 				console.log(error);
 			});
