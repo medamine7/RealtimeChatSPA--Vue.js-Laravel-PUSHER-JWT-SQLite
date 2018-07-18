@@ -52,14 +52,15 @@ class ConversationsController extends Controller
                 ->join('conversation_user','conversations.id','=','conversation_user.conversation_id')
                 ->join('users','users.id','=','conversation_user.user_id')
                 ->join('messages','messages.conversation_id','=','conversations.id')
-                ->select('users.name','users.avatar','conversations.id as conversation_id','messages.*')
-                ->where('users.id','!=',1)
+                ->select('users.id as user_id','users.name','users.avatar','conversations.id as conversation_id','messages.*')
+                ->where('users.id','!=',$user_id)
                 ->orderBy('messages.created_at','desc')
                 ->first();
 
 
                 $result->push(array(
                     "user" => [
+                                "id"=>$temp->user_id,
                                 "name"=>$temp->name,
                                 "avatar"=>$temp->avatar
                             ],

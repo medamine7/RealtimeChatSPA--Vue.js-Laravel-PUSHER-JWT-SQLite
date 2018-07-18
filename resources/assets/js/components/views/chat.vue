@@ -69,7 +69,11 @@
 					</div>
 					<div>
 						<h3>{{conversation.user.name}}</h3>
-						<p>{{conversation.body}}</p>
+						<p>
+							<strong v-if="conversation.author_id!=userId">{{conversation.user.name.split(" ")[0]}}:</strong>
+							<strong v-else>You:</strong>
+							{{conversation.body}}
+						</p>
 					</div>
 				</div>
 			</div>
@@ -660,6 +664,14 @@
 				Ref.userAvatar=userResponse.data.user.avatar;
 				Ref.tempUserAvatar=Ref.userAvatar;
 				Ref.conversations=conversationsResponse.data.conversations;
+
+
+				Echo.private('conversations.'+Ref.userId)
+			    .listen('ConversationEvent', (e) => {
+			        Ref.updateConversations();
+			        console.log('update');
+			    });
+
 			}))
 			.catch(error=>{
 				console.log(error);
@@ -681,7 +693,22 @@
 				this.activeConversation=id;
 			},
 
+			updateConversations(){
+				var Ref=this;
+				axios.get('/api/conversations?token='+this.token)
+				.then((response) => {
+					Ref.conversations=response.data.conversations;
+
+				})
+				.catch(error => {
+					console.log(error);
+				});
+
+			},
+
 			sendMessage(){
+
+				if(this.message =='' || !this.message.replace(/\s/g, '').length) return 0;
 				var Ref=this;
 				this.current_conversation.messages.unshift({
 					body: this.message,
@@ -690,10 +717,20 @@
 				let messageToSend = this.message;
 				this.message='';
 
+				this.conversations.sort(function (a, b) {
+				    return a.conversation_id ==  Ref.current_conversation.id
+				               ? 0   
+				               : 1;   
+				});
+
+				
+				this.conversations[0].body=messageToSend;
+
+
 				axios.post('/api/message/send?token='+this.token,
 					{conversation_id: (Ref.current_conversation.messages.length!==0)? Ref.current_conversation.id : null , 
 						body: messageToSend,
-						message_to: this.currentContact.id})
+						message_to: Ref.currentContact.id})
 				.then(response =>{
 					if (Ref.current_conversation.messages.length ===0) Ref.getConversation(response.data.conversation_id,this.currentContact);
 
@@ -706,6 +743,9 @@
 			getConversation(id,user){
 				this.loading=true;
 				var Ref=this;
+			
+				Echo.leave('chat.'+this.current_conversation.id);
+
 				this.currentContact=user;
 				axios.post('/api/conversation/get?token='+this.token,
 					{conversation_id: id})
@@ -715,11 +755,17 @@
 					Ref.current_conversation=response.data.conversation;
 
 					Echo.join("chat."+response.data.conversation.id)
-					// .here()
-					//    .joining()
-					//    .leaving()
+					// .here((user)=> {
+					// 	console.log(user,"here");
+					// })
+				   // .joining(()=>{
+				   // 		Echo.leave("chat."+this.current_conversation.id);
+				   // })
+					// .leaving((user)=> {
+					// console.log("left");
+					// })
 					.listen('MessageSent', e =>{
-						this.current_conversation.messages.unshift(e.message);
+						if(e.message.conversation_id==this.current_conversation.id) this.current_conversation.messages.unshift(e.message);
 					});
 
 				})
@@ -747,6 +793,7 @@
 				this.searching=false;
 				var Ref=this;
 				this.keyword='';
+				this.chosen=true;
 				axios.post('/api/user/find/conversation?token='+this.token,
 					{id: user.id})
 				.then(response =>{

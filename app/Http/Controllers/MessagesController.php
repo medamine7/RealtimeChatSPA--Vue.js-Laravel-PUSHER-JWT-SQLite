@@ -8,6 +8,7 @@ use App\Conversation;
 use App\Conversation_user;
 use JWTAuth;
 use App\Events\MessageSent;
+use App\Events\ConversationEvent;
 
 
 class MessagesController extends Controller
@@ -57,9 +58,10 @@ class MessagesController extends Controller
 
             $message->save();
         }
-
+        
 
         broadcast(new MessageSent($message))->toOthers();
+        broadcast(new ConversationEvent($message_to))->toOthers();
     	   
         return response()->json(["conversation_id"=>$conversation_id],200);
     }

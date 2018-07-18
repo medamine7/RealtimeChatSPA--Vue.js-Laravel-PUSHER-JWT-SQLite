@@ -16,22 +16,22 @@
 			<div class="modal-indicator"><span>Register</span></div>
 			<div class="form-element">
 				<label for="name">Name:</label>
-				<input @keuyp.enter="validate" v-validate="'required|max:255'" name="name" class="cool-input" type="text" v-model="name" autofocus>
+				<input @keyup.enter="validate" v-validate="'required|max:255'" name="name" class="cool-input" type="text" v-model="name" autofocus>
 				<span class="error-text animated fadeInDown" v-show="errors.has('name')">{{ errors.first('name') }}</span>
 			</div>
 			<div class="form-element">
 				<label for="email">Email:</label>
-				<input @keuyp.enter="validate" v-validate="'required|email|max:255|'" name="email" class="cool-input" type="email" v-model="email">
+				<input @keyup.enter="validate" v-validate="'required|email|max:255|'" name="email" class="cool-input" type="email" v-model="email">
 				<span class="error-text animated fadeInDown" v-show="errors.has('email')">{{ errors.first('email') }}</span>
 			</div>
 			<div class="form-element">
 				<label for="password">Password:</label>
-				<input @keuyp.enter="validate" v-validate="'required|min:6'" name="password" ref="password" class="cool-input" type="password" v-model="password">
+				<input @keyup.enter="validate" v-validate="'required|min:6'" name="password" ref="password" class="cool-input" type="password" v-model="password">
 				<span class="error-text animated fadeInDown" v-show="errors.has('password')">{{ errors.first('password') }}</span>
 			</div>
 			<div class="form-element">
 				<label for="password">Repeat password:</label>
-				<input @keuyp.enter="validate" v-validate="'required|confirmed:password'" name="password repeat" class="cool-input" type="password" v-model="password_confirmation"> 
+				<input @keyup.enter="validate" v-validate="'required|confirmed:password'" name="password repeat" class="cool-input" type="password" v-model="password_confirmation"> 
 				<span class="error-text animated fadeInDown" v-show="errors.has('password repeat')">{{ errors.first('password repeat') }}</span>
 			</div>
 			<div class="form-element">
@@ -143,6 +143,7 @@
 	            if (response.status==201) Ref.backendOkay=true;
 	          })
 	          .catch(function (error) {
+	            	Ref.loading=false;
 					Ref.resetError();
 					if(error.response.status==422) Ref.backendError="The email has already been taken.";
 					else Ref.backendError='invalid data';

@@ -22,3 +22,8 @@ Broadcast::channel('chat.{conversation_id}', function ($user, $conversation_id) 
     ->where('conversation_id', $conversation_id)
     ->first();
 });
+
+
+Broadcast::channel('conversations.{message_to}', function ($user, $message_to) {
+    return true;
+});

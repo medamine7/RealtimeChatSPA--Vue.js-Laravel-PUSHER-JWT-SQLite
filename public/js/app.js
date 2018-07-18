@@ -18165,6 +18165,7 @@ __WEBPACK_IMPORTED_MODULE_1_axios___default.a.defaults.headers.common['X-Request
 
 				if (response.status == 201) Ref.backendOkay = true;
 			}).catch(function (error) {
+				Ref.loading = false;
 				Ref.resetError();
 				if (error.response.status == 422) Ref.backendError = "The email has already been taken.";else Ref.backendError = 'invalid data';
 			});
@@ -18276,7 +18277,7 @@ var render = function() {
             attrs: { name: "name", type: "text", autofocus: "" },
             domProps: { value: _vm.name },
             on: {
-              keuyp: function($event) {
+              keyup: function($event) {
                 if (
                   !("button" in $event) &&
                   _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
@@ -18333,7 +18334,7 @@ var render = function() {
             attrs: { name: "email", type: "email" },
             domProps: { value: _vm.email },
             on: {
-              keuyp: function($event) {
+              keyup: function($event) {
                 if (
                   !("button" in $event) &&
                   _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
@@ -18391,7 +18392,7 @@ var render = function() {
             attrs: { name: "password", type: "password" },
             domProps: { value: _vm.password },
             on: {
-              keuyp: function($event) {
+              keyup: function($event) {
                 if (
                   !("button" in $event) &&
                   _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
@@ -18450,7 +18451,7 @@ var render = function() {
             attrs: { name: "password repeat", type: "password" },
             domProps: { value: _vm.password_confirmation },
             on: {
-              keuyp: function($event) {
+              keyup: function($event) {
                 if (
                   !("button" in $event) &&
                   _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
@@ -19358,6 +19359,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -19398,6 +19403,11 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			Ref.userAvatar = userResponse.data.user.avatar;
 			Ref.tempUserAvatar = Ref.userAvatar;
 			Ref.conversations = conversationsResponse.data.conversations;
+
+			Echo.private('conversations.' + Ref.userId).listen('ConversationEvent', function (e) {
+				Ref.updateConversations();
+				console.log('update');
+			});
 		})).catch(function (error) {
 			console.log(error);
 		});
@@ -19415,9 +19425,18 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 		activate: function activate(id) {
 			this.activeConversation = id;
 		},
+		updateConversations: function updateConversations() {
+			var Ref = this;
+			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/conversations?token=' + this.token).then(function (response) {
+				Ref.conversations = response.data.conversations;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
 		sendMessage: function sendMessage() {
 			var _this = this;
 
+			if (this.message == '' || !this.message.replace(/\s/g, '').length) return 0;
 			var Ref = this;
 			this.current_conversation.messages.unshift({
 				body: this.message,
@@ -19426,9 +19445,15 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			var messageToSend = this.message;
 			this.message = '';
 
+			this.conversations.sort(function (a, b) {
+				return a.conversation_id == Ref.current_conversation.id ? 0 : 1;
+			});
+
+			this.conversations[0].body = messageToSend;
+
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/message/send?token=' + this.token, { conversation_id: Ref.current_conversation.messages.length !== 0 ? Ref.current_conversation.id : null,
 				body: messageToSend,
-				message_to: this.currentContact.id }).then(function (response) {
+				message_to: Ref.currentContact.id }).then(function (response) {
 				if (Ref.current_conversation.messages.length === 0) Ref.getConversation(response.data.conversation_id, _this.currentContact);
 			}).catch(function (error) {
 				console.log(error);
@@ -19439,6 +19464,9 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 
 			this.loading = true;
 			var Ref = this;
+
+			Echo.leave('chat.' + this.current_conversation.id);
+
 			this.currentContact = user;
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/conversation/get?token=' + this.token, { conversation_id: id }).then(function (response) {
 				_this2.chosen = true;
@@ -19446,11 +19474,17 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 				Ref.current_conversation = response.data.conversation;
 
 				Echo.join("chat." + response.data.conversation.id)
-				// .here()
-				//    .joining()
-				//    .leaving()
+				// .here((user)=> {
+				// 	console.log(user,"here");
+				// })
+				// .joining(()=>{
+				// 		Echo.leave("chat."+this.current_conversation.id);
+				// })
+				// .leaving((user)=> {
+				// console.log("left");
+				// })
 				.listen('MessageSent', function (e) {
-					_this2.current_conversation.messages.unshift(e.message);
+					if (e.message.conversation_id == _this2.current_conversation.id) _this2.current_conversation.messages.unshift(e.message);
 				});
 			}).catch(function (error) {
 				console.log(error);
@@ -19473,6 +19507,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			this.searching = false;
 			var Ref = this;
 			this.keyword = '';
+			this.chosen = true;
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/user/find/conversation?token=' + this.token, { id: user.id }).then(function (response) {
 				_this3.currentContact = user;
 				// if(response.data.conversation===null){
@@ -19827,7 +19862,20 @@ var render = function() {
                   _c("div", [
                     _c("h3", [_vm._v(_vm._s(conversation.user.name))]),
                     _vm._v(" "),
-                    _c("p", [_vm._v(_vm._s(conversation.body))])
+                    _c("p", [
+                      conversation.author_id != _vm.userId
+                        ? _c("strong", [
+                            _vm._v(
+                              _vm._s(conversation.user.name.split(" ")[0]) + ":"
+                            )
+                          ])
+                        : _c("strong", [_vm._v("You:")]),
+                      _vm._v(
+                        "\n\t\t\t\t\t\t" +
+                          _vm._s(conversation.body) +
+                          "\n\t\t\t\t\t"
+                      )
+                    ])
                   ])
                 ]
               )
