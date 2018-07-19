@@ -709,14 +709,22 @@
 			},
 
 			isTyping(status){
-
+				
 				if (this.current_conversation.id){
 					var Ref=this;
 					clearTimeout(this.typingTimer);
 
 					this.typingTimer = setTimeout(()=>{
-						this.isTyping(false);
-					},4000);
+
+						Echo.join("chat."+Ref.current_conversation.id)
+						.whisper('typing',{
+							typingEvent: {
+								name : Ref.userName.split(" ")[0],
+								typing: false
+							}
+						});
+
+					},2000);
 
 					Echo.join("chat."+Ref.current_conversation.id)
 					.whisper('typing',{
@@ -802,8 +810,10 @@
 
 					Echo.join("chat."+response.data.conversation.id)
 					.listen('MessageSent', e =>{
-						if(e.message.conversation_id==this.current_conversation.id) 
-							this.current_conversation.messages.unshift(e.message);
+						if(e.message.conversation_id==Ref.current_conversation.id){
+							Ref.typingIndicator.typing=false;
+							Ref.current_conversation.messages.unshift(e.message);
+						}
 					})
 					.listenForWhisper('typing', e =>{
 						Ref.typingIndicator=e.typingEvent;

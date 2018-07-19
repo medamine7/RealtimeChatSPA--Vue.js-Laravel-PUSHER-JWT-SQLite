@@ -19444,15 +19444,20 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			this.activeConversation = id;
 		},
 		isTyping: function isTyping(status) {
-			var _this = this;
 
 			if (this.current_conversation.id) {
 				var Ref = this;
 				clearTimeout(this.typingTimer);
 
 				this.typingTimer = setTimeout(function () {
-					_this.isTyping(false);
-				}, 4000);
+
+					Echo.join("chat." + Ref.current_conversation.id).whisper('typing', {
+						typingEvent: {
+							name: Ref.userName.split(" ")[0],
+							typing: false
+						}
+					});
+				}, 2000);
 
 				Echo.join("chat." + Ref.current_conversation.id).whisper('typing', {
 					typingEvent: {
@@ -19471,7 +19476,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			});
 		},
 		sendMessage: function sendMessage() {
-			var _this2 = this;
+			var _this = this;
 
 			if (this.message == '' || !this.message.replace(/\s/g, '').length) return 0;
 			var Ref = this;
@@ -19493,9 +19498,9 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 				body: messageToSend,
 				message_to: Ref.currentContact.id }).then(function (response) {
 				if (!Ref.current_conversation.id) {
-					_this2.current_conversation.id = response.data.conversation_id;
+					_this.current_conversation.id = response.data.conversation_id;
 					Echo.join("chat." + response.data.conversation_id).listen('MessageSent', function (e) {
-						if (e.message.conversation_id == _this2.current_conversation.id) _this2.current_conversation.messages.unshift(e.message);
+						if (e.message.conversation_id == _this.current_conversation.id) _this.current_conversation.messages.unshift(e.message);
 					});
 				}
 			}).catch(function (error) {
@@ -19503,7 +19508,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			});
 		},
 		getConversation: function getConversation(id, user) {
-			var _this3 = this;
+			var _this2 = this;
 
 			this.loading = true;
 			var Ref = this;
@@ -19512,12 +19517,15 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 
 			this.currentContact = user;
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/conversation/get?token=' + this.token, { conversation_id: id }).then(function (response) {
-				_this3.chosen = true;
-				_this3.loading = false;
+				_this2.chosen = true;
+				_this2.loading = false;
 				Ref.current_conversation = response.data.conversation;
 
 				Echo.join("chat." + response.data.conversation.id).listen('MessageSent', function (e) {
-					if (e.message.conversation_id == _this3.current_conversation.id) _this3.current_conversation.messages.unshift(e.message);
+					if (e.message.conversation_id == Ref.current_conversation.id) {
+						Ref.typingIndicator.typing = false;
+						Ref.current_conversation.messages.unshift(e.message);
+					}
 				}).listenForWhisper('typing', function (e) {
 					Ref.typingIndicator = e.typingEvent;
 				});
@@ -19537,14 +19545,14 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			});
 		},
 		getFoundConversation: function getFoundConversation(user) {
-			var _this4 = this;
+			var _this3 = this;
 
 			this.searching = false;
 			var Ref = this;
 			this.keyword = '';
 			this.chosen = true;
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/user/find/conversation?token=' + this.token, { id: user.id }).then(function (response) {
-				_this4.currentContact = user;
+				_this3.currentContact = user;
 				// if(response.data.conversation===null){
 				// 	console.log(user);
 				// }
@@ -19556,13 +19564,13 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			});
 		},
 		changeAvatarInit: function changeAvatarInit(e) {
-			var _this5 = this;
+			var _this4 = this;
 
 			var fileReader = new FileReader();
 
 			fileReader.readAsDataURL(e.target.files[0]);
 			fileReader.onload = function (e) {
-				_this5.tempUserAvatar = e.target.result;
+				_this4.tempUserAvatar = e.target.result;
 				$('#save-avatar').removeAttr('disabled');
 			};
 		},
