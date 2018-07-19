@@ -42,6 +42,14 @@
 				<h3>{{currentContact.name}}</h3>
 			</div>
 			<div class="chat-content" v-if="current_conversation">
+				<div class="message other-message" v-if="typingIndicator.typing">
+					<div class="message-wrapper">
+						<div class="chat-avatar">
+							<img :src="currentContact.avatar" alt="">
+						</div>
+						<p><typingAnimation/></p>
+					</div>
+				</div>
 				<div v-if="!loading" :class="[(message.author_id == userId)? 'own-message' : 'other-message', 'message']" v-for="message in current_conversation.messages" >
 					<div class="message-wrapper">
 						<div class="chat-avatar">
@@ -53,7 +61,7 @@
 				<img v-show="loading" id="chat-preloader" src="/img/bpreloader.svg" alt="">
 			</div>
 			<div class="text-field">
-				<textarea placeholder="Type in your message here..." v-model="message" @keydown.enter.prevent="sendMessage" autofocus></textarea>
+				<textarea placeholder="Type in your message here..." v-model="message" @keydown.enter.prevent="sendMessage" autofocus @keydown="isTyping(true)"></textarea>
 				<button class="cool-btn" @click="sendMessage">Send</button>
 			</div>
 		</div>
@@ -622,6 +630,7 @@
 
 <script>
 	import axios from 'axios'
+	import typingAnimation from '../typingAnimation'
 
 	axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 	export default {
@@ -647,9 +656,16 @@
 				password:'',
 				newPassword:'',
 				loading:false,
-				chosen: false
+				chosen: false,
+				typingIndicator:'',
+				typingTimer:''
 			}
 		},
+		
+		components:{
+			typingAnimation
+		},
+
 		created(){
 			this.token = localStorage.getItem('token');
 		    Echo.connector.pusher.config.auth.headers['Authorization'] = 'Bearer '+this.token;
@@ -669,7 +685,6 @@
 				Echo.private('conversations.'+Ref.userId)
 			    .listen('ConversationEvent', (e) => {
 			        Ref.updateConversations();
-			        console.log('update');
 			    });
 
 			}))
@@ -691,6 +706,29 @@
 
 			activate(id){
 				this.activeConversation=id;
+			},
+
+			isTyping(status){
+
+				if (this.current_conversation.id){
+					var Ref=this;
+					clearTimeout(this.typingTimer);
+
+					this.typingTimer = setTimeout(()=>{
+						this.isTyping(false);
+					},4000);
+
+					Echo.join("chat."+Ref.current_conversation.id)
+					.whisper('typing',{
+						typingEvent: {
+							name : Ref.userName.split(" ")[0],
+							typing: status
+						}
+					});
+
+				} 
+
+
 			},
 
 			updateConversations(){
@@ -763,17 +801,12 @@
 					Ref.current_conversation=response.data.conversation;
 
 					Echo.join("chat."+response.data.conversation.id)
-					// .here((user)=> {
-					// 	console.log(user,"here");
-					// })
-				   // .joining(()=>{
-				   // 		Echo.leave("chat."+this.current_conversation.id);
-				   // })
-					// .leaving((user)=> {
-					// console.log("left");
-					// })
 					.listen('MessageSent', e =>{
-						if(e.message.conversation_id==this.current_conversation.id) this.current_conversation.messages.unshift(e.message);
+						if(e.message.conversation_id==this.current_conversation.id) 
+							this.current_conversation.messages.unshift(e.message);
+					})
+					.listenForWhisper('typing', e =>{
+						Ref.typingIndicator=e.typingEvent;
 					});
 
 				})

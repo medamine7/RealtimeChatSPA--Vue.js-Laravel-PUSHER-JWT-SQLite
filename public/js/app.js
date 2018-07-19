@@ -18741,6 +18741,8 @@ exports.push([module.i, "\n.chat-container {\n  background: #fff;\n  height: 100
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__typingAnimation__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__typingAnimation___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__typingAnimation__);
 //
 //
 //
@@ -19363,6 +19365,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -19390,9 +19401,17 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			password: '',
 			newPassword: '',
 			loading: false,
-			chosen: false
+			chosen: false,
+			typingIndicator: '',
+			typingTimer: ''
 		};
 	},
+
+
+	components: {
+		typingAnimation: __WEBPACK_IMPORTED_MODULE_1__typingAnimation___default.a
+	},
+
 	created: function created() {
 		this.token = localStorage.getItem('token');
 		Echo.connector.pusher.config.auth.headers['Authorization'] = 'Bearer ' + this.token;
@@ -19406,7 +19425,6 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 
 			Echo.private('conversations.' + Ref.userId).listen('ConversationEvent', function (e) {
 				Ref.updateConversations();
-				console.log('update');
 			});
 		})).catch(function (error) {
 			console.log(error);
@@ -19425,6 +19443,25 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 		activate: function activate(id) {
 			this.activeConversation = id;
 		},
+		isTyping: function isTyping(status) {
+			var _this = this;
+
+			if (this.current_conversation.id) {
+				var Ref = this;
+				clearTimeout(this.typingTimer);
+
+				this.typingTimer = setTimeout(function () {
+					_this.isTyping(false);
+				}, 4000);
+
+				Echo.join("chat." + Ref.current_conversation.id).whisper('typing', {
+					typingEvent: {
+						name: Ref.userName.split(" ")[0],
+						typing: status
+					}
+				});
+			}
+		},
 		updateConversations: function updateConversations() {
 			var Ref = this;
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/conversations?token=' + this.token).then(function (response) {
@@ -19434,7 +19471,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			});
 		},
 		sendMessage: function sendMessage() {
-			var _this = this;
+			var _this2 = this;
 
 			if (this.message == '' || !this.message.replace(/\s/g, '').length) return 0;
 			var Ref = this;
@@ -19456,9 +19493,9 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 				body: messageToSend,
 				message_to: Ref.currentContact.id }).then(function (response) {
 				if (!Ref.current_conversation.id) {
-					_this.current_conversation.id = response.data.conversation_id;
+					_this2.current_conversation.id = response.data.conversation_id;
 					Echo.join("chat." + response.data.conversation_id).listen('MessageSent', function (e) {
-						if (e.message.conversation_id == _this.current_conversation.id) _this.current_conversation.messages.unshift(e.message);
+						if (e.message.conversation_id == _this2.current_conversation.id) _this2.current_conversation.messages.unshift(e.message);
 					});
 				}
 			}).catch(function (error) {
@@ -19466,7 +19503,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			});
 		},
 		getConversation: function getConversation(id, user) {
-			var _this2 = this;
+			var _this3 = this;
 
 			this.loading = true;
 			var Ref = this;
@@ -19475,22 +19512,14 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 
 			this.currentContact = user;
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/conversation/get?token=' + this.token, { conversation_id: id }).then(function (response) {
-				_this2.chosen = true;
-				_this2.loading = false;
+				_this3.chosen = true;
+				_this3.loading = false;
 				Ref.current_conversation = response.data.conversation;
 
-				Echo.join("chat." + response.data.conversation.id)
-				// .here((user)=> {
-				// 	console.log(user,"here");
-				// })
-				// .joining(()=>{
-				// 		Echo.leave("chat."+this.current_conversation.id);
-				// })
-				// .leaving((user)=> {
-				// console.log("left");
-				// })
-				.listen('MessageSent', function (e) {
-					if (e.message.conversation_id == _this2.current_conversation.id) _this2.current_conversation.messages.unshift(e.message);
+				Echo.join("chat." + response.data.conversation.id).listen('MessageSent', function (e) {
+					if (e.message.conversation_id == _this3.current_conversation.id) _this3.current_conversation.messages.unshift(e.message);
+				}).listenForWhisper('typing', function (e) {
+					Ref.typingIndicator = e.typingEvent;
 				});
 			}).catch(function (error) {
 				console.log(error);
@@ -19508,14 +19537,14 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			});
 		},
 		getFoundConversation: function getFoundConversation(user) {
-			var _this3 = this;
+			var _this4 = this;
 
 			this.searching = false;
 			var Ref = this;
 			this.keyword = '';
 			this.chosen = true;
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/user/find/conversation?token=' + this.token, { id: user.id }).then(function (response) {
-				_this3.currentContact = user;
+				_this4.currentContact = user;
 				// if(response.data.conversation===null){
 				// 	console.log(user);
 				// }
@@ -19527,13 +19556,13 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			});
 		},
 		changeAvatarInit: function changeAvatarInit(e) {
-			var _this4 = this;
+			var _this5 = this;
 
 			var fileReader = new FileReader();
 
 			fileReader.readAsDataURL(e.target.files[0]);
 			fileReader.onload = function (e) {
-				_this4.tempUserAvatar = e.target.result;
+				_this5.tempUserAvatar = e.target.result;
 				$('#save-avatar').removeAttr('disabled');
 			};
 		},
@@ -19729,6 +19758,20 @@ var render = function() {
                 "div",
                 { staticClass: "chat-content" },
                 [
+                  _vm.typingIndicator.typing
+                    ? _c("div", { staticClass: "message other-message" }, [
+                        _c("div", { staticClass: "message-wrapper" }, [
+                          _c("div", { staticClass: "chat-avatar" }, [
+                            _c("img", {
+                              attrs: { src: _vm.currentContact.avatar, alt: "" }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("p", [_c("typingAnimation")], 1)
+                        ])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
                   _vm._l(_vm.current_conversation.messages, function(message) {
                     return !_vm.loading
                       ? _c(
@@ -19797,16 +19840,21 @@ var render = function() {
               },
               domProps: { value: _vm.message },
               on: {
-                keydown: function($event) {
-                  if (
-                    !("button" in $event) &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
+                keydown: [
+                  function($event) {
+                    if (
+                      !("button" in $event) &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    $event.preventDefault()
+                    return _vm.sendMessage($event)
+                  },
+                  function($event) {
+                    _vm.isTyping(true)
                   }
-                  $event.preventDefault()
-                  return _vm.sendMessage($event)
-                },
+                ],
                 input: function($event) {
                   if ($event.target.composing) {
                     return
@@ -66876,6 +66924,191 @@ var index_esm = {
 /* harmony default export */ __webpack_exports__["a"] = (index_esm);
 
 
+
+/***/ }),
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(83)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(85)
+/* template */
+var __vue_template__ = __webpack_require__(86)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\typingAnimation.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-61322b46", Component.options)
+  } else {
+    hotAPI.reload("data-v-61322b46", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(84);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("a23a52ba", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-61322b46\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./typingAnimation.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-61322b46\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./typingAnimation.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.c-three-dots-loader {\r\n  position: relative;\r\n  display: inline-block;\r\n  width: 10px;\r\n  height: 10px;\r\n  border-radius: 50%;\r\n  margin: -20px 24px 20px;\r\n  -webkit-animation-fill-mode: both;\r\n          animation-fill-mode: both;\r\n  -webkit-animation: three-dots-loader-animation 2s infinite ease-in-out;\r\n          animation: three-dots-loader-animation 2s infinite ease-in-out;\r\n  -webkit-animation-delay: -0.16s;\r\n          animation-delay: -0.16s;\r\n  color: #efefef;\n}\n.c-three-dots-loader:before,\r\n.c-three-dots-loader:after {\r\n  content: '';\r\n  position: absolute;\r\n  width: 10px;\r\n  height: 10px;\r\n  top: 0;\r\n  -webkit-animation: three-dots-loader-animation 2s infinite ease-in-out;\r\n          animation: three-dots-loader-animation 2s infinite ease-in-out;\r\n  border-radius: 50%;\n}\n.c-three-dots-loader:before {\r\n  left: -20px;\r\n  -webkit-animation-delay: -0.32s;\r\n          animation-delay: -0.32s;\n}\n.c-three-dots-loader:after {\r\n  left: 20px;\n}\n@-webkit-keyframes three-dots-loader-animation {\n0%,\r\n  80%,\r\n  100% {\r\n    -webkit-box-shadow: 0 20px 0 -24px;\r\n            box-shadow: 0 20px 0 -24px;\n}\n40% {\r\n    -webkit-box-shadow: 0 20px 0 0;\r\n            box-shadow: 0 20px 0 0;\n}\n}\n@keyframes three-dots-loader-animation {\n0%,\r\n  80%,\r\n  100% {\r\n    -webkit-box-shadow: 0 20px 0 -24px;\r\n            box-shadow: 0 20px 0 -24px;\n}\n40% {\r\n    -webkit-box-shadow: 0 20px 0 0;\r\n            box-shadow: 0 20px 0 0;\n}\n}\r\n\r\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'typingAnimation'
+});
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dots-container" }, [
+      _c("div", { staticClass: "c-three-dots-loader" })
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-61322b46", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
