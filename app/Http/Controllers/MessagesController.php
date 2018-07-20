@@ -18,7 +18,7 @@ class MessagesController extends Controller
     	$message_to=$request->get('message_to');
     	$body=$request->get('body');
     	$author_id= JWTAuth::parseToken()->toUser()->id;
-
+        $new = false;
         $message;
         
         if( $conversation_id ){
@@ -34,7 +34,7 @@ class MessagesController extends Controller
             $new_conversation = new Conversation();
             $new_conversation->save();
             $conversation_id=$new_conversation->id;
-
+            $new=true;
 
             $first_conversation_user = new Conversation_user([
                 'user_id' => $message_to,
@@ -58,11 +58,11 @@ class MessagesController extends Controller
 
             $message->save();
         }
-        
+
 
         broadcast(new MessageSent($message))->toOthers();
         broadcast(new ConversationEvent($message_to))->toOthers();
     	   
-        return response()->json(["conversation_id"=>$conversation_id],200);
+        return response()->json(["conversation_id"=>$conversation_id,"new_conversation" => $new],200);
     }
 }

@@ -709,7 +709,7 @@
 			},
 
 			isTyping(status){
-				
+
 				if (this.current_conversation.id){
 					var Ref=this;
 					clearTimeout(this.typingTimer);
@@ -771,7 +771,7 @@
 				});
 
 				
-				this.conversations[0].body=messageToSend;
+				if(this.current_conversation.id == this.conversations[0].conversation_id) this.conversations[0].body=messageToSend;
 
 
 				axios.post('/api/message/send?token='+this.token,
@@ -784,9 +784,14 @@
 						Echo.join("chat."+response.data.conversation_id)
 						.listen('MessageSent', e =>{
 							if(e.message.conversation_id==this.current_conversation.id) this.current_conversation.messages.unshift(e.message);
+						})
+						.listenForWhisper('typing', e =>{
+							Ref.typingIndicator=e.typingEvent;
 						});
 
 					} 
+
+					if(response.data.new_conversation) Ref.updateConversations();
 
 				})
 				.catch(error =>{
@@ -849,9 +854,7 @@
 					{id: user.id})
 				.then(response =>{
 					this.currentContact=user;
-					// if(response.data.conversation===null){
-					// 	console.log(user);
-					// }
+
 					if(response.data.conversation) Ref.current_conversation=response.data.conversation;
 					else Ref.current_conversation={
 						messages: []

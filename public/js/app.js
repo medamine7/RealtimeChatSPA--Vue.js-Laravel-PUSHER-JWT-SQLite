@@ -19492,7 +19492,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 				return a.conversation_id == Ref.current_conversation.id ? 0 : 1;
 			});
 
-			this.conversations[0].body = messageToSend;
+			if (this.current_conversation.id == this.conversations[0].conversation_id) this.conversations[0].body = messageToSend;
 
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/message/send?token=' + this.token, { conversation_id: Ref.current_conversation.messages.length !== 0 ? Ref.current_conversation.id : null,
 				body: messageToSend,
@@ -19501,8 +19501,12 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 					_this.current_conversation.id = response.data.conversation_id;
 					Echo.join("chat." + response.data.conversation_id).listen('MessageSent', function (e) {
 						if (e.message.conversation_id == _this.current_conversation.id) _this.current_conversation.messages.unshift(e.message);
+					}).listenForWhisper('typing', function (e) {
+						Ref.typingIndicator = e.typingEvent;
 					});
 				}
+
+				if (response.data.new_conversation) Ref.updateConversations();
 			}).catch(function (error) {
 				console.log(error);
 			});
@@ -19553,9 +19557,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 			this.chosen = true;
 			__WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/api/user/find/conversation?token=' + this.token, { id: user.id }).then(function (response) {
 				_this3.currentContact = user;
-				// if(response.data.conversation===null){
-				// 	console.log(user);
-				// }
+
 				if (response.data.conversation) Ref.current_conversation = response.data.conversation;else Ref.current_conversation = {
 					messages: []
 				};
