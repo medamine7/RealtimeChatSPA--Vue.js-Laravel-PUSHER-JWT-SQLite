@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use JWTAuth;
+use Hash;
 
 class UserController extends Controller
 {
@@ -127,4 +128,36 @@ class UserController extends Controller
             'new_path' => $user->avatar]
             ,200);
     }
+    
+    public function changePassword(Request $request){
+
+        $input_password= $request->get('password');
+        $new_password = $request->get('new_password');
+
+        $this->validate($request, [
+            'password' => 'required|string|min:6', 
+            'new_password' => 'required|string|min:6', 
+        ]);
+
+        $user = JWTAuth::parseToken()->toUser();
+
+
+
+
+        if (Hash::check($input_password, $user->password)) {
+            $user = User::find($user->id);
+
+            $user->password = bcrypt($new_password);
+
+            $user->save();
+        }else {
+             return response()->json([
+                'status' => 'error',
+                'message'    => 'Wrong password'
+            ], 401);
+        }
+
+    }
 }
+
+

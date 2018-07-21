@@ -28,6 +28,7 @@ Route::middleware(['jwt.auth'])->group(function () {
 	Route::post('/message/send','MessagesController@sendMessage');
 	Route::get('/conversations','ConversationsController@getConversations');
 	Route::post('/conversation/get','ConversationsController@getConversation');
+	Route::post('/user/cp','UserController@changePassword');
 	
 });
 

@@ -1,5 +1,17 @@
 <template>
 	<div class="chat-container">
+		<transition
+			name="custom-classes-transition"
+		    enter-active-class="animated fadeInDown"
+		    leave-active-class="animated fadeOutUp">
+			<span v-if="backendError" class="backend-error">{{backendError}}</span>		
+		</transition>
+		<transition
+			name="custom-classes-transition"
+		    enter-active-class="animated fadeInDown"
+		    leave-active-class="animated fadeOutUp">
+			<span v-if="backendOkay" class="backend-okay">Your password was changed successfully.</span>	
+		</transition>
 		<div class="sidebar">
 			<div class="main-menu">
 				<div class="avatar-container">
@@ -31,9 +43,15 @@
 					</div>
 					<button id="save-avatar" class="cool-btn" disabled @click="submitAvatarChange">Save avatar</button>					
 					<h5>Change password</h5>
-					<input type="text" class="cool-input" placeholder="Your Password" v-model="password">
-					<input type="text" class="cool-input" placeholder="New Password" v-model="newPassword">
-					<button id="save-password" class="cool-btn" :disabled="(!password || !newPassword)">Save password</button>					
+					<div class="form-element">
+						<input @keyup.enter='validate' class="cool-input" v-validate="'required'" type="password"  name="password" placeholder="Your Password" v-model="password">
+						<span class="error-text animated fadeInDown" v-show="errors.has('password')">{{ errors.first('password') }}</span>
+					</div>
+					<div class="form-element">
+						<input @keyup.enter='validate' class="cool-input" v-validate="'required|min:6'" type="password" name="newPassword" placeholder="New Password" v-model="newPassword">
+						<span class="error-text animated fadeInDown" v-show="errors.has('newPassword')">{{ errors.first('newPassword') }}</span>
+					</div>
+					<button id="save-password" class="cool-btn" :disabled="(!password || !newPassword)" @click="validate">Save password</button>					
 				</div>
 			</transition>
 		</div>
@@ -112,7 +130,27 @@
 		background:#fff;
 		height:100vh;	
 		display:flex;
+		position: relative;
 		width:100%;
+
+
+		.backend-error,
+		.backend-okay{
+			background: #ff4757a1;
+		    color: #fff;
+		    position: absolute;
+		    top: 0;
+		    padding: 10px;
+		    z-index: 20;
+		    text-align: center;
+		    left: 0;
+		    right: 0;
+	    }
+
+	    .backend-okay{
+			background: #1eb938a1 !important;
+
+	    }
 	}
 
 	.sidebar,
@@ -260,7 +298,7 @@
 			border-radius: 20px;
 			padding: 7px 10px;
 		    word-break: break-word;
-			color:#fff;
+ 			color:#fff;
 			display: inline-block;
 			margin: 5px;
 		}
@@ -365,6 +403,16 @@
 			padding:10px 20px;
 			display: flex;
 			flex-direction: column;
+
+
+			.error-text{
+			    font-size: 13px;
+			    position: absolute;
+			    color: #f57e7d;
+			    bottom: 0px;
+			    left: 35px;
+
+			}
 
 			.cool-btn{
 				width: 125px;
@@ -591,7 +639,8 @@
 	   	background:#dfe4ea !important;
 	   	border-left: 5px solid #70a1ff;
 	}
-	
+
+
 	.conversations-placeholder{
 	    justify-content: center;
 	    display: flex;
@@ -625,6 +674,7 @@
 	    right: 0;
 
 	}
+
 </style>
 
 
@@ -658,7 +708,9 @@
 				loading:false,
 				chosen: false,
 				typingIndicator:'',
-				typingTimer:''
+				typingTimer:'',
+				backendError:'',
+				backendOkay:false
 			}
 		},
 		
@@ -863,6 +915,46 @@
 				.catch(error =>{
 					console.log(error);
 				})
+			},
+
+
+			validate(){
+				this.$validator.validate().then(result => {
+					if (result) {
+						this.changePassword();
+					}
+				});
+			},
+
+
+			changePassword(){
+				var Ref=this;
+				axios.post('/api/user/cp?token='+this.token, {
+		            password: this.password,
+		            new_password: this.newPassword
+		        })
+				.then(function (response) {           
+					Ref.backendOkay=true;
+					Ref.resetOkay();
+				})
+				.catch(function (error) {
+					Ref.loading=false;
+					Ref.resetError();
+					Ref.backendError=error.response.data.message;
+				});
+
+			},
+
+			resetError(){
+				setTimeout(()=>{
+					this.backendError='';
+				},4000);
+			},
+
+			resetOkay(){
+				setTimeout(()=>{
+					this.backendOkay=false;
+				},4000);
 			},
 
 			changeAvatarInit(e){
