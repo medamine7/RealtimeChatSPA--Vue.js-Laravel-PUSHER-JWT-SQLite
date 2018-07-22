@@ -741,7 +741,7 @@
 
 			}))
 			.catch(error=>{
-				console.log(error);
+				Ref.logout();
 			});
 
 		},

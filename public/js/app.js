@@ -13469,7 +13469,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
 
 
 
-/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
+var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
     mode: 'history',
     routes: [{
         path: '/',
@@ -13478,9 +13478,18 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
     }, {
         path: '/chat',
         name: 'chat',
-        component: __WEBPACK_IMPORTED_MODULE_3__components_views_chat___default.a
+        component: __WEBPACK_IMPORTED_MODULE_3__components_views_chat___default.a,
+        meta: { requiresAuth: true }
     }]
-}));
+});
+
+router.beforeEach(function (to, from, next) {
+    if (to.meta.requiresAuth) {
+        if (window.localStorage.getItem('token')) next();else next({ name: 'home' });
+    } else if (window.localStorage.getItem('token')) next({ name: 'chat' });else next();
+});
+
+/* harmony default export */ __webpack_exports__["a"] = (router);
 
 /***/ }),
 /* 21 */
@@ -19479,7 +19488,7 @@ __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.common['X-Request
 				Ref.updateConversations();
 			});
 		})).catch(function (error) {
-			console.log(error);
+			Ref.logout();
 		});
 	},
 
